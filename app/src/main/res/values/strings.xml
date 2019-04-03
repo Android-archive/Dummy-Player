@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">VeloxY SoundZ</string>
+    <string name="genre_rnb"><![CDATA[R&B]]></string>
+    <string name="genre_contemporary_r_b"><![CDATA[Contemporary R&B]]></string>
+    <string name="genre_blues">Blues</string>
+    <string name="genre_hip_hop">Hip Hop</string>
+    <string name="genre_background_score">Background Score</string>
+    <string name="genre_south_indian_blues">South Indian Blues</string>
+    <string name="genre_electro_pop">Electro Pop</string>
+    <string name="new_release">New Release</string>
+    <string name="no_recents">No Recents</string>
+    <string name="no_recents_summary">It seems that you haven\'t played any music recently.</string>
+    <string name="no_new_release">No New Release</string>
+    <string name="no_new_release_summary">There hasn\'t been a recent release yet, Stay Tuned!</string>
+    <string name="view_more">View more</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="recents">Recents</string>
+    <string name="no_genre_summary">Sorry we couldn\'t find any songs matching to this Genre</string>
+    <string name="no_genre">No Songs</string>
+    <string name="genre">Genre</string>
+    <string name="artists">Artists</string>
+    <string name="library">Library</string>
+    <string name="title_activity_main_holder">MainActivityHolder</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="welcome_string">Welcome to VeloxY SoundZ</string>
+    <string name="type_artist_text">I am here to publish my songs</string>
+    <string name="type_user_text">I am here to listen songs</string>
+    <string name="hint_email">Email address</string>
+    <string name="login_desc">Get started by logging in to your account</string>
+    <string name="hint_password">Password</string>
+    <string name="logo">logo</string>
+    <string name="forgot_password">Forgot password ?</string>
+    <string name="login">Login</string>
+    <string name="or">or</string>
+    <string name="create_account">Create Account</string>
+    <string name="select_profile_picture">Select profile picture</string>
+    <string name="hint_name">Name</string>
+    <string name="back_to_login">Back to login</string>
+    <string name="register">Register</string>
+    <string name="new_releases">New Releases</string>
+    <string name="view_all">View all</string>
+    <string name="clear_all">Clear all</string>
+
+</resources>

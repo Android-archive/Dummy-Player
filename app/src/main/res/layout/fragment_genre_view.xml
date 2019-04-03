@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".GenreView">
+
+    <RelativeLayout
+        android:padding="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/logo"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:fabSize="mini"
+            android:layout_margin="10dp"
+            app:srcCompat="@mipmap/music_cd"
+            android:tint="@color/purple_dark"
+            app:backgroundTint="@color/purple_light"
+            />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/logo"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/logo"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Genre"
+                fontPath="fonts/GoogleSans_Bold.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#313131"
+                android:textSize="22sp"
+                tools:ignore="MissingPrefix"
+                />
+
+            <TextView
+                android:id="@+id/genre_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#313131"
+                tools:ignore="MissingPrefix"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/pbar"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <RelativeLayout
+            android:id="@+id/default_item"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/white"
+            android:layout_marginBottom="10dp"
+            >
+
+            <ImageView
+                android:id="@+id/image"
+                android:src="@mipmap/music_cd"
+                android:tint="#757575"
+                android:padding="15dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/image"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    fontPath="fonts/GoogleSans_Bold.ttf"
+                    android:textSize="19sp"
+                    android:textColor="#313131"
+                    android:text="@string/no_genre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="MissingPrefix" />
+
+                <TextView
+                    android:text="@string/no_genre_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

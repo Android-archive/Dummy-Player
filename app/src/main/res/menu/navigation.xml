@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@mipmap/home"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/library"
+        android:icon="@drawable/ic_library_music_24dp"
+        android:title="Library" />
+
+    <item
+        android:id="@+id/album"
+        android:icon="@mipmap/music_album"
+        android:title="Albums" />
+
+    <item
+        android:id="@+id/recents"
+        android:icon="@mipmap/recents"
+        android:title="Recents" />
+
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/ic_person_24dp"
+        android:title="Profile" />
+
+</menu>
