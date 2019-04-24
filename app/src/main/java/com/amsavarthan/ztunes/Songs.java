@@ -2,7 +2,7 @@ package com.amsavarthan.ztunes;
 
 public class Songs {
 
-    private String name,artist,genre,link,album,new_release,art;
+    private String name,artist,genre,link,album,new_release,art,approved;
 
     public Songs() {
     }
@@ -47,7 +47,7 @@ public class Songs {
         this.new_release = new_release;
     }
 
-    public Songs(String name, String artist, String genre, String link, String album, String new_release, String art) {
+    public Songs(String name, String artist, String genre, String link, String album, String new_release, String art, String approved) {
         this.name = name;
         this.artist = artist;
         this.genre = genre;
@@ -55,6 +55,7 @@ public class Songs {
         this.album = album;
         this.new_release = new_release;
         this.art = art;
+        this.approved = approved;
     }
 
     public String getArtist() {
@@ -71,5 +72,13 @@ public class Songs {
 
     public void setArt(String art) {
         this.art = art;
+    }
+
+    public String getApproved() {
+        return approved;
+    }
+
+    public void setApproved(String approved) {
+        this.approved = approved;
     }
 }

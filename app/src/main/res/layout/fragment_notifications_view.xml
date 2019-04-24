@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".GenreView">
+
+    <RelativeLayout
+        android:padding="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/logo"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:fabSize="mini"
+            android:layout_margin="10dp"
+            app:srcCompat="@drawable/ic_notifications_black_24dp"
+            android:tint="@color/purple_dark"
+            app:backgroundTint="@color/purple_light"
+            />
+
+        <TextView
+            android:text="Notifications"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/logo"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/logo"
+            android:layout_centerVertical="true"
+            fontPath="fonts/GoogleSans_Bold.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#313131"
+            android:textSize="22sp"
+            tools:ignore="MissingPrefix"
+            />
+
+    </RelativeLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <LinearLayout
+                android:id="@+id/default_item"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                >
+
+                <ImageView
+                    android:layout_marginBottom="5dp"
+                    android:tint="#757575"
+                    app:srcCompat="@drawable/ic_notifications_black_24dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" />
+
+                <TextView
+                    android:id="@+id/default_title"
+                    fontPath="fonts/GoogleSans_Bold.ttf"
+                    android:textSize="19sp"
+                    android:gravity="center"
+                    android:text="No notifications yet"
+                    android:textColor="#313131"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="MissingPrefix" />
+
+                <TextView
+                    android:id="@+id/default_text"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:text="Check this section for recent followers, updates and general notifications"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

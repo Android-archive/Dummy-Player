@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     android:id="@+id/main_layout"
-    android:background="@color/grey"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/grey"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -43,19 +43,17 @@
                     android:layout_alignParentStart="true"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_alignParentLeft="true" />
+                    />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
                     android:gravity="center_vertical"
-                    android:layout_toStartOf="@+id/playPause"
+                    android:layout_toStartOf="@+id/buttons"
                     android:layout_toEndOf="@+id/music_art"
-                    android:layout_toRightOf="@+id/music_art"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:layout_toLeftOf="@+id/playPause">
+                    >
 
                     <TextView
                         fontPath="fonts/GoogleSans_Bold.ttf"
@@ -74,18 +72,39 @@
 
                 </LinearLayout>
 
-                <ImageView
+                <LinearLayout
+                    android:id="@+id/buttons"
                     android:layout_alignParentEnd="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:id="@+id/playPause"
-                    android:tint="@color/purple_dark"
-                    app:srcCompat="@drawable/ic_play_arrow_24dp"
-                    android:padding="15dp"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentRight="true" />
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:id="@+id/playPause"
+                        android:tint="@color/purple_dark"
+                        app:srcCompat="@drawable/ic_play_arrow_24dp"
+                        android:padding="15dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        />
+
+                    <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:id="@+id/close"
+                        android:tint="@color/purple_dark"
+                        app:srcCompat="@drawable/ic_clear_white_24dp"
+                        android:padding="15dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        />
+
+
+                </LinearLayout>
 
             </RelativeLayout>
 
@@ -106,6 +125,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ImageView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:id="@+id/prev"
+                    android:tint="@color/black"
+                    app:srcCompat="@drawable/ic_skip_previous_black_24dp"
+                    android:padding="15dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/playPauseFab"
                     android:layout_margin="10dp"
@@ -115,6 +146,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
+                <ImageView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:id="@+id/next"
+                    android:tint="@color/black"
+                    app:srcCompat="@drawable/ic_skip_next_black_24dp"
+                    android:padding="15dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    />
+
             </LinearLayout>
 
         </RelativeLayout>
@@ -123,12 +166,14 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:itemIconTint="@color/purple_dark"
-        app:itemTextColor="@color/purple_dark"
         android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        app:labelVisibilityMode="unlabeled"
+        android:layout_height="wrap_content"
+        app:itemIconTint="@drawable/bottom_nav_icon"
+        app:itemTextColor="@drawable/bottom_nav_icon"
         android:background="#EEEEEE"
         app:menu="@menu/navigation" />
+
 
 </RelativeLayout>

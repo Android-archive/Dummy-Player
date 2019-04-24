@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
@@ -42,6 +43,7 @@ public class Artist_SongsView extends Fragment {
     String artist;
     String[] artists;
     View view;
+    private SwipeRefreshLayout refreshLayout;
 
     @Nullable
     @Override
@@ -62,7 +64,7 @@ public class Artist_SongsView extends Fragment {
 
         title=view.findViewById(R.id.artist_name);
         RecentsViewModel viewModel= ViewModelProviders.of(this).get(RecentsViewModel.class);
-        songsListbyArtistAdapter=new SongsAdapter(songsListbyArtist,view.getContext(),viewModel);
+        songsListbyArtistAdapter=new SongsAdapter(songsListbyArtist,view.getContext(),viewModel,"null");
 
         RecyclerView mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -74,7 +76,7 @@ public class Artist_SongsView extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(songsListbyArtistAdapter);
 
-        title.setText(artist);
+        title.setText(artist.replace(";",","));
 
         try {
             artists = artist.split(",");
@@ -83,6 +85,8 @@ public class Artist_SongsView extends Fragment {
         }
 
 
+        setUpRefreshLayout(artist);
+        refreshLayout.setRefreshing(true);
         getItems(artist);
 
 
@@ -90,25 +94,39 @@ public class Artist_SongsView extends Fragment {
 
     private void getItems(final String artist){
 
+        final Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
+        final Animation fade_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
+
         FirebaseFirestore.getInstance().collection("songs")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
-                            if (documentChange.getType() == DocumentChange.Type.ADDED) {
 
-                                if(documentChange.getDocument().getString("artist").contains(artist)) {
-                                    Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
+                        if(queryDocumentSnapshots.isEmpty()){
 
-                                    view.findViewById(R.id.pbar).setVisibility(View.GONE);
-                                    view.findViewById(R.id.pbar).startAnimation(fade_out);
+                            view.findViewById(R.id.default_item).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.default_item).startAnimation(fade_in);
+                            refreshLayout.setRefreshing(false);
 
-                                    Songs song = documentChange.getDocument().toObject(Songs.class);
-                                    songsListbyArtist.add(song);
-                                    songsListbyArtistAdapter.notifyDataSetChanged();
+                        }else {
+
+                            for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
+                                if (documentChange.getType() == DocumentChange.Type.ADDED) {
+
+                                    if (documentChange.getDocument().getString("artist").contains(artist)) {
+
+                                        refreshLayout.setRefreshing(false);
+                                        view.findViewById(R.id.default_item).setVisibility(View.GONE);
+                                        view.findViewById(R.id.default_item).startAnimation(fade_out);
+
+                                        Songs song = documentChange.getDocument().toObject(Songs.class);
+                                        songsListbyArtist.add(song);
+                                        songsListbyArtistAdapter.notifyDataSetChanged();
+                                    }
                                 }
                             }
+
                         }
                     }
                 })
@@ -116,9 +134,27 @@ public class Artist_SongsView extends Fragment {
                     @SuppressLint("CheckResult")
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                        refreshLayout.setRefreshing(false);
+
                     }
                 });
 
+    }
+
+
+    private void setUpRefreshLayout(final String artist) {
+
+        refreshLayout=view.findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                songsListbyArtist.clear();
+                songsListbyArtistAdapter.notifyDataSetChanged();
+                getItems(artist);
+            }
+        });
 
     }
     

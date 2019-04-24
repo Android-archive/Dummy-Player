@@ -37,17 +37,17 @@
 
     </androidx.cardview.widget.CardView>
 
+
     <TextView
         android:id="@+id/title"
-        android:textSize="18sp"
-        android:textColor="#313131"
-        android:text="Music name in here"
-        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/fab"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/fab"
+        android:textSize="18sp"
+        android:textColor="#313131"
+        android:layout_marginStart="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/fab"
         android:layout_marginLeft="5dp" />
 
 </RelativeLayout>

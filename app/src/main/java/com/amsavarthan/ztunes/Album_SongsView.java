@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -37,6 +38,8 @@ public class Album_SongsView extends Fragment {
     TextView title;
     String album;
     View view;
+    private String type;
+    private SwipeRefreshLayout refreshLayout;
 
     @Nullable
     @Override
@@ -49,17 +52,27 @@ public class Album_SongsView extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if(getArguments()!=null){
+
+            try {
+                type = getArguments().getString("type");
+            }catch (Exception e){
+                type="null";
+            }
+
             album=getArguments().getString("name");
+
         }
 
         songsListbyGenre.clear();
 
         title=view.findViewById(R.id.album_name);
         RecentsViewModel viewModel= ViewModelProviders.of(this).get(RecentsViewModel.class);
-        songsListbyGenreAdapter=new SongsAdapter(songsListbyGenre,view.getContext(),viewModel);
+
+        songsListbyGenreAdapter=new SongsAdapter(songsListbyGenre,view.getContext(),viewModel,type);
 
         mRecyclerView=view.findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
 
         LinearLayoutManager layoutManager=new GridLayoutManager(view.getContext(),2,RecyclerView.VERTICAL,false);
         layoutManager.setSmoothScrollbarEnabled(true);
@@ -70,6 +83,8 @@ public class Album_SongsView extends Fragment {
 
         title.setText(album);
 
+        setUpRefreshLayout(album);
+        refreshLayout.setRefreshing(true);
         getItems(album);
 
     }
@@ -82,22 +97,20 @@ public class Album_SongsView extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
+                        Animation fade_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
                         if(queryDocumentSnapshots.getDocuments().isEmpty()){
 
-                            Songs song=new Songs("Default", "", "","","","yes", "");
-                            songsListbyGenre.add(song);
-                            songsListbyGenreAdapter.notifyDataSetChanged();
+                            view.findViewById(R.id.default_layout).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.default_layout).startAnimation(fade_in);
+                            refreshLayout.setRefreshing(false);
 
                         }else {
 
                             for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
                                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
 
-                                    Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
-
-                                    view.findViewById(R.id.pbar).setVisibility(View.GONE);
-                                    view.findViewById(R.id.pbar).startAnimation(fade_out);
-
+                                    refreshLayout.setRefreshing(false);
                                     Songs song = documentChange.getDocument().toObject(Songs.class);
                                     songsListbyGenre.add(song);
                                     songsListbyGenreAdapter.notifyDataSetChanged();
@@ -112,9 +125,27 @@ public class Album_SongsView extends Fragment {
                     @SuppressLint("CheckResult")
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
+                        refreshLayout.setRefreshing(false);
+                        e.printStackTrace();
                     }
                 });
 
+
+    }
+
+    private void setUpRefreshLayout(final String album) {
+
+        refreshLayout=view.findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                songsListbyGenre.clear();
+                songsListbyGenreAdapter.notifyDataSetChanged();
+                getItems(album);
+            }
+        });
 
     }
 

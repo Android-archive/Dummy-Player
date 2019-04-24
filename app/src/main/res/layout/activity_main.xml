@@ -9,124 +9,169 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        android:id="@+id/slidingPanel"
-        android:layout_above="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:background="@color/grey"
-        app:umanoPanelHeight="80dp"
-        app:umanoShadowHeight="4dp"
-        tools:context=".MainActivity">
-
-        <FrameLayout
-            android:id="@+id/container"
+            android:id="@+id/slidingPanel"
+            android:layout_above="@+id/navigation"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/grey"
+            app:umanoPanelHeight="80dp"
+            app:umanoShadowHeight="4dp"
+            tools:context=".MainActivity">
 
-        <RelativeLayout
-            android:id="@+id/now_playing"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <FrameLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <RelativeLayout
-                android:id="@+id/top"
-                android:layout_alignParentTop="true"
-                android:padding="10dp"
+                android:id="@+id/now_playing"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/top"
+                    android:layout_alignParentTop="true"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/music_art"
+                        android:layout_alignParentStart="true"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentLeft="true" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:layout_toStartOf="@+id/buttons"
+                        android:layout_toEndOf="@+id/music_art"
+                        android:layout_toRightOf="@+id/music_art"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_toLeftOf="@+id/buttons">
+
+                        <TextView
+                            fontPath="fonts/GoogleSans_Bold.ttf"
+                            android:id="@+id/music_name"
+                            android:textColor="#313131"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:ignore="MissingPrefix" />
+
+                        <TextView
+                            android:id="@+id/music_author_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/buttons"
+                        android:layout_alignParentEnd="true"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true">
+
+                        <ImageView
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:id="@+id/playPause"
+                            android:tint="@color/purple_dark"
+                            app:srcCompat="@drawable/ic_play_arrow_24dp"
+                            android:padding="15dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            />
+
+                        <ImageView
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:id="@+id/close"
+                            android:tint="@color/purple_dark"
+                            app:srcCompat="@drawable/ic_clear_white_24dp"
+                            android:padding="15dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            />
+
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
 
                 <ImageView
-                    android:id="@+id/music_art"
-                    android:layout_alignParentStart="true"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentLeft="true" />
+                    android:layout_below="@+id/top"
+                    android:layout_above="@+id/bottom"
+                    android:id="@+id/bigArt"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical"
-                    android:layout_toStartOf="@+id/playPause"
-                    android:layout_toEndOf="@+id/music_art"
-                    android:layout_toRightOf="@+id/music_art"
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/bottom"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_toLeftOf="@+id/playPause">
+                    android:layout_height="wrap_content">
 
-                    <TextView
-                        fontPath="fonts/GoogleSans_Bold.ttf"
-                        android:id="@+id/music_name"
-                        android:textColor="#313131"
-                        android:textSize="18sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:ignore="MissingPrefix" />
+                    <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:id="@+id/prev"
+                        android:tint="@color/black"
+                        app:srcCompat="@drawable/ic_skip_previous_black_24dp"
+                        android:padding="15dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        />
 
-                    <TextView
-                        android:id="@+id/music_author_name"
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/playPauseFab"
+                        android:layout_margin="10dp"
+                        app:srcCompat="@drawable/ic_play_arrow_24dp"
+                        android:tint="@color/purple_dark"
+                        app:backgroundTint="@color/purple_light"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:id="@+id/next"
+                        android:tint="@color/black"
+                        app:srcCompat="@drawable/ic_skip_next_black_24dp"
+                        android:padding="15dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         />
 
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_alignParentEnd="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:id="@+id/playPause"
-                    android:tint="@color/purple_dark"
-                    app:srcCompat="@drawable/ic_play_arrow_24dp"
-                    android:padding="15dp"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentRight="true" />
-
             </RelativeLayout>
 
-            <ImageView
-                android:layout_below="@+id/top"
-                android:layout_above="@+id/bottom"
-                android:id="@+id/bigArt"
-                android:scaleType="centerCrop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:layout_alignParentBottom="true"
-                android:id="@+id/bottom"
-                android:padding="10dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/playPauseFab"
-                    android:layout_margin="10dp"
-                    app:srcCompat="@drawable/ic_play_arrow_24dp"
-                    android:tint="@color/purple_dark"
-                    app:backgroundTint="@color/purple_light"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:itemIconTint="@color/purple_dark"
-        app:itemTextColor="@color/purple_dark"
-        android:layout_alignParentBottom="true"
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconTint="@drawable/bottom_nav_icon"
+        app:itemTextColor="@drawable/bottom_nav_icon"
         android:background="#EEEEEE"
         app:menu="@menu/navigation" />
 

@@ -8,6 +8,7 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import pl.droidsonroids.gif.GifImageView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -18,6 +19,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,21 +38,29 @@ import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LoginActivity extends AppCompatActivity {
 
     TextInputLayout emailLayout,passwordLayout;
     TextInputEditText emailInput,passwordInput;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore mFirestore;
-    private SharedPreferences sharedPreferences;
+    FirebaseAuth mAuth;
+    FirebaseFirestore mFirestore;
+    SharedPreferences sharedPreferences;
+    LinearLayout top,bottom;
+    GifImageView gifLogo;
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
-        MultiDex.install(this);
     }
 
+    public static void startActivity(Context context){
+
+        context.startActivity(new Intent(context,LoginActivity.class));
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,28 +81,16 @@ public class LoginActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.grey));
         }
 
-        mAuth=FirebaseAuth.getInstance();
-        mFirestore= FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
 
-        sharedPreferences=getSharedPreferences("AccountPref",MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("AccountPref", MODE_PRIVATE);
 
-        if(mAuth.getCurrentUser()!=null){
-            if(mAuth.getCurrentUser().isEmailVerified()) {
-                if (!sharedPreferences.getString("account_type", "none").equals("none")) {
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
-                } else {
-                    startActivity(new Intent(this, AccountTypeSelection.class));
-                    finish();
-                }
-            }
-        }
+        emailLayout = findViewById(R.id.email_layout);
+        passwordLayout = findViewById(R.id.password_layout);
 
-        emailLayout=findViewById(R.id.email_layout);
-        passwordLayout=findViewById(R.id.password_layout);
-
-        emailInput=findViewById(R.id.emailEditText);
-        passwordInput=findViewById(R.id.passwordEditText);
+        emailInput = findViewById(R.id.emailEditText);
+        passwordInput = findViewById(R.id.passwordEditText);
 
     }
 
@@ -108,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
             final ProgressDialog progressDialog=new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Logging in...");
+            progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
 
@@ -127,9 +128,15 @@ public class LoginActivity extends AppCompatActivity {
                                                Map<String,Object> map=new HashMap<>();
                                                map.put("last_login",String.valueOf(System.currentTimeMillis()));
 
+                                               final String name=documentSnapshot.getString("name");
+                                               final String profile=documentSnapshot.getString("picture");
                                                final String account_type=documentSnapshot.getString("account_type");
 
-                                               sharedPreferences.edit().putString("account_type",account_type).apply();
+                                               sharedPreferences.edit()
+                                                       .putString("name", name)
+                                                       .putString("picture", profile)
+                                                       .putString("account_type", account_type)
+                                                       .apply();
 
                                                mFirestore.collection("Users")
                                                        .document(documentSnapshot.getId())
@@ -137,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                            @Override
                                                            public void onSuccess(Void aVoid) {
+
                                                                Toasty.success(LoginActivity.this, "Successfully logged in", Toasty.LENGTH_SHORT, true).show();
                                                                if(account_type.equals("none")){
                                                                    startActivity(new Intent(LoginActivity.this,AccountTypeSelection.class));
@@ -170,10 +178,12 @@ public class LoginActivity extends AppCompatActivity {
 
                             }else{
 
-                                final ProgressDialog progressDialog=new ProgressDialog(LoginActivity.this);
-                                progressDialog.setIndeterminate(true);
-                                progressDialog.setMessage("Sending...");
-                                progressDialog.setCanceledOnTouchOutside(false);
+                                progressDialog.dismiss();
+                                final ProgressDialog pDialog=new ProgressDialog(LoginActivity.this);
+                                pDialog.setIndeterminate(true);
+                                pDialog.setMessage("Sending...");
+                                progressDialog.setCancelable(false);
+                                pDialog.setCanceledOnTouchOutside(false);
 
                                 new DialogSheet(LoginActivity.this)
                                         .setRoundedCorners(true)
@@ -183,18 +193,18 @@ public class LoginActivity extends AppCompatActivity {
                                         .setPositiveButton("Re-send Mail", new DialogSheet.OnPositiveClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                progressDialog.show();
+                                                pDialog.show();
                                                 authResult.getUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        progressDialog.dismiss();
+                                                        pDialog.dismiss();
                                                         Toasty.success(LoginActivity.this,"Verification email sent",Toasty.LENGTH_SHORT,true).show();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        progressDialog.dismiss();
+                                                        pDialog.dismiss();
                                                         Toasty.error(LoginActivity.this,"Error sending mail : "+e.getLocalizedMessage(),Toasty.LENGTH_SHORT,true).show();
                                                         Log.e("Error",e.getLocalizedMessage());
                                                     }

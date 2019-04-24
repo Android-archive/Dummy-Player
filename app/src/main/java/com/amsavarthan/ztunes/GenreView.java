@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -33,11 +34,11 @@ public class GenreView extends Fragment {
     private SongsAdapter songsListbyGenreAdapter;
     private RecyclerView mRecyclerView;
 
-
     TextView title;
     String genre;
     View view;
     boolean empty;
+    private SwipeRefreshLayout refreshLayout;
 
     @Nullable
     @Override
@@ -57,7 +58,7 @@ public class GenreView extends Fragment {
 
         title=view.findViewById(R.id.genre_name);
         RecentsViewModel viewModel= ViewModelProviders.of(this).get(RecentsViewModel.class);
-        songsListbyGenreAdapter=new SongsAdapter(songsListbyGenre,view.getContext(),viewModel);
+        songsListbyGenreAdapter=new SongsAdapter(songsListbyGenre,view.getContext(),viewModel,"null");
 
         mRecyclerView=view.findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -71,6 +72,8 @@ public class GenreView extends Fragment {
 
         title.setText(genre);
 
+        setUpRefreshLayout(genre);
+        refreshLayout.setRefreshing(true);
         getItems(genre);
 
         if(empty){
@@ -79,6 +82,21 @@ public class GenreView extends Fragment {
 
             mRecyclerView.setLayoutManager(layoutManager1);
         }
+
+    }
+
+    private void setUpRefreshLayout(final String genre) {
+
+        refreshLayout=view.findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                songsListbyGenre.clear();
+                songsListbyGenreAdapter.notifyDataSetChanged();
+                getItems(genre);
+            }
+        });
 
     }
 
@@ -94,14 +112,13 @@ public class GenreView extends Fragment {
 
                             empty=true;
                             title.setText("No songs found");
+                            refreshLayout.setRefreshing(false);
 
                             Animation fade_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
                             view.findViewById(R.id.default_item).setVisibility(View.VISIBLE);
                             view.findViewById(R.id.default_item).startAnimation(fade_in);
 
                             Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
-                            view.findViewById(R.id.pbar).setVisibility(View.GONE);
-                            view.findViewById(R.id.pbar).startAnimation(fade_out);
 
 
                         }else {
@@ -111,9 +128,7 @@ public class GenreView extends Fragment {
 
                                     Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
 
-                                    view.findViewById(R.id.pbar).setVisibility(View.GONE);
-                                    view.findViewById(R.id.pbar).startAnimation(fade_out);
-
+                                    refreshLayout.setRefreshing(false);
                                     Songs song = documentChange.getDocument().toObject(Songs.class);
                                     songsListbyGenre.add(song);
                                     songsListbyGenreAdapter.notifyDataSetChanged();
@@ -128,6 +143,9 @@ public class GenreView extends Fragment {
                     @SuppressLint("CheckResult")
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
+                        e.printStackTrace();
+                        refreshLayout.setRefreshing(false);
                     }
                 });
 

@@ -42,5 +42,20 @@
     <string name="new_releases">New Releases</string>
     <string name="view_all">View all</string>
     <string name="clear_all">Clear all</string>
+    <string name="pending">Pending approval</string>
+    <string name="removed">Removed</string>
+    <string name="approved">Approved</string>
+    <string name="progress_downloading">Downloading…</string>
+    <string name="progress_uploading">Uploading…</string>
 
+    <string name="upload_success">Upload finished</string>
+    <string name="upload_failure">Upload failed</string>
+
+    <string name="download_success">Download finished</string>
+    <string name="download_failure">Download failed</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="feed">Feed</string>
+    <string name="profile">Profile</string>
+    <string name="notifications">Notifications</string>
 </resources>

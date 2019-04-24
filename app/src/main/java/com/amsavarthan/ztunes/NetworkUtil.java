@@ -24,6 +24,13 @@ public class NetworkUtil {
         return TYPE_NOT_CONNECTED;
     }
 
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
     public static int getConnectivityStatusString(Context context) {
         int conn = NetworkUtil.getConnectivityStatus(context);
         int status = 0;

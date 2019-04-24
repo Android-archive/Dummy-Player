@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".SearchView">
+
+    <RelativeLayout
+        android:padding="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/logo"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:fabSize="mini"
+            android:layout_margin="10dp"
+            android:layout_alignParentEnd="true"
+            android:padding="10dp"
+            app:srcCompat="@drawable/ic_search_black_24dp"
+            android:tint="@color/purple_dark"
+            app:backgroundTint="@color/purple_light"
+            android:layout_alignParentRight="true" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
+            android:layout_toStartOf="@+id/logo"
+            android:layout_toLeftOf="@+id/logo"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchQueryText"
+                android:inputType="text"
+                android:focusedByDefault="true"
+                android:hint="Search here"
+                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <HorizontalScrollView
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/c1"
+                android:layout_marginStart="10dp"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Users"
+                app:chipStartPadding="5dp"
+                app:chipIconTint="@color/purple_dark"
+                app:chipIcon="@drawable/ic_person_24dp"
+                android:layout_marginLeft="10dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/c2"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Artists"
+                app:chipStartPadding="10dp"
+                app:chipIconTint="@color/purple_dark"
+                app:chipIcon="@mipmap/mic"
+                android:layout_marginLeft="4dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/c3"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                app:chipStartPadding="10dp"
+                android:text="Songs"
+                app:chipIconTint="@color/purple_dark"
+                app:chipIcon="@mipmap/music_note"
+                android:layout_marginLeft="4dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/c4"
+                android:layout_marginEnd="10dp"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Albums"
+                app:chipStartPadding="10dp"
+                app:chipIconTint="@color/purple_dark"
+                app:chipIcon="@mipmap/music_album"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="10dp" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:paddingTop="10dp"
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <LinearLayout
+                android:id="@+id/default_item"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                >
+
+                <ImageView
+                    android:layout_marginBottom="5dp"
+                    app:srcCompat="@drawable/ic_sentiment_dissatisfied_black_24dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" />
+
+                <TextView
+                    android:id="@+id/default_title"
+                    fontPath="fonts/GoogleSans_Bold.ttf"
+                    android:textSize="19sp"
+                    android:gravity="center"
+                    android:textColor="#313131"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="MissingPrefix" />
+
+                <TextView
+                    android:id="@+id/default_text"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

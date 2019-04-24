@@ -32,10 +32,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     private Context context;
     private RecentsViewModel viewModel;
     private View view;
+    private String type;
 
-    public SongsAdapter(List<Songs> newReleaseList, Context context, RecentsViewModel viewModel) {
+    public SongsAdapter(List<Songs> newReleaseList, Context context, RecentsViewModel viewModel,String type) {
         this.newReleaseList = newReleaseList;
         this.viewModel=viewModel;
+        this.type=type;
         this.context = context;
     }
 
@@ -106,17 +108,24 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     recentsEntity.setArtist(release.getArtist());
                     recentsEntity.setArt(release.getArt());
 
-                    String nameInDatabase = viewModel.findSongByName(release.getName());
-                    if (!nameInDatabase.equals("null")) {
-                        viewModel.deletePost(viewModel.findSongEntityByName(release.getName()));
-                        viewModel.savePost(recentsEntity);
-                    } else {
-                        viewModel.savePost(recentsEntity);
+                    if(!type.equals("manage_view_all")) {
+
+                        String nameInDatabase = viewModel.findSongByName(release.getName());
+                        if (!nameInDatabase.equals("null")) {
+                            viewModel.deletePost(viewModel.findSongEntityByName(release.getName()));
+                            viewModel.savePost(recentsEntity);
+                        } else {
+                            viewModel.savePost(recentsEntity);
+                        }
+
+                        HomeFragment.HideDefaultCard(context);
+                        MainActivity.startSong(context, recentsEntity);
+                    }else{
+
+                        HomeFragment.HideDefaultCard(context);
+                        MainActivity.startSong(context, recentsEntity);
+
                     }
-
-                    HomeFragment.HideDefaultCard(context);
-
-                    MainActivity.startSong(context,recentsEntity);
 
                 }
             });

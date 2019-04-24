@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".GenreView">
+
+    <RelativeLayout
+        android:padding="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/logo"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:fabSize="mini"
+            android:layout_margin="10dp"
+            app:srcCompat="@mipmap/music_note"
+            android:tint="@color/purple_dark"
+            app:backgroundTint="@color/purple_light"
+            />
+
+
+        <TextView
+            android:text="Manage Songs"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/logo"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/logo"
+            android:layout_centerVertical="true"
+            fontPath="fonts/GoogleSans_Bold.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#313131"
+            android:textSize="22sp"
+            tools:ignore="MissingPrefix"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_alignParentStart="true"
+                android:padding="15dp"
+                fontPath="fonts/GoogleSans_Bold.ttf"
+                android:text="Your Albums"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                tools:ignore="MissingPrefix" />
+
+            <ImageView
+                android:id="@+id/add_album"
+                android:layout_alignParentEnd="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:tint="@color/colorAccent"
+                app:srcCompat="@drawable/ic_add_24dp"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/pbar1"
+                android:indeterminate="true"
+                android:layout_gravity="center"
+                style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/a_default_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_a"
+                    android:src="@mipmap/music_album"
+                    android:tint="#757575"
+                    android:padding="15dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/image_a"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/image_a"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        fontPath="fonts/GoogleSans_Bold.ttf"
+                        android:textSize="19sp"
+                        android:textColor="#313131"
+                        android:text="No albums found"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:ignore="MissingPrefix" />
+
+                    <TextView
+                        android:text="Click on the plus button to add your first album"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mAlbumsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_alignParentStart="true"
+                android:padding="15dp"
+                fontPath="fonts/GoogleSans_Bold.ttf"
+                android:text="Your Songs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                tools:ignore="MissingPrefix" />
+
+            <ImageView
+                android:id="@+id/add_song"
+                android:layout_alignParentEnd="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:tint="@color/colorAccent"
+                app:srcCompat="@drawable/ic_add_24dp"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/pbar2"
+                android:indeterminate="true"
+                android:layout_gravity="center"
+                style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:id="@+id/s_default_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="15dp"
+                    android:src="@mipmap/music"
+                    android:tint="#757575" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toEndOf="@id/image"
+                    android:layout_toRightOf="@id/image"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        fontPath="fonts/GoogleSans_Bold.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No songs found"
+                        android:textColor="#313131"
+                        android:textSize="19sp"
+                        tools:ignore="MissingPrefix" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Click on the plus button to add your first song" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mSongsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:overScrollMode="never"
+    android:scrollbars="none"
+    tools:context=".AddSong">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:padding="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/logo"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:fabSize="mini"
+                android:layout_margin="10dp"
+                app:srcCompat="@mipmap/music"
+                android:tint="@color/purple_dark"
+                app:backgroundTint="@color/purple_light"
+                />
+
+            <TextView
+                android:text="Add New Song"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@+id/logo"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/logo"
+                android:layout_centerVertical="true"
+                fontPath="fonts/GoogleSans_Bold.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#313131"
+                android:textSize="22sp"
+                tools:ignore="MissingPrefix"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="15dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:foreground="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp"
+                    android:layout_gravity="center_horizontal"
+                    app:cardMaxElevation="5dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardBackgroundColor="@color/purple_light"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp">
+
+                    <ImageView
+                        android:id="@+id/art"
+                        android:src="@drawable/default_song_art"
+                        android:scaleType="centerCrop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:paddingStart="5dp"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp">
+
+                    <TextView
+                        android:text="Recommended size : 512x512"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/upload"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:text="Upload Song Cover"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_layout"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameEditText"
+                    android:inputType="text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/genre_layout"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Genre">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/genreEditText"
+                    android:inputType="textPersonName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:text="If there are some other artists who worked with you in this song enter their names seperated by a comma below (exclude your name)"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/artist_layout"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Additional Artists">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/artistEditText"
+                    android:inputType="textCapWords"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/select_album"
+                android:focusable="true"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:padding="10dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/icon_type"
+                    android:layout_alignParentStart="true"
+                    app:srcCompat="@mipmap/music_album"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    />
+
+                <TextView
+                    android:id="@+id/album_name"
+                    android:padding="10dp"
+                    android:textSize="17sp"
+                    android:layout_toEndOf="@id/icon_type"
+                    android:layout_centerInParent="true"
+                    android:layout_toStartOf="@+id/edit_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/edit_type"
+                    android:layout_toRightOf="@id/icon_type" />
+
+                <ImageView
+                    android:padding="10dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/edit_type"
+                    android:tint="#757575"
+                    android:layout_alignParentEnd="true"
+                    app:srcCompat="@drawable/ic_chevron_right_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    />
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/select_song"
+                    android:text="Select song"
+                    app:iconSize="24dp"
+                    app:icon="@mipmap/music_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/create"
+                    android:visibility="gone"
+                    app:iconSize="24dp"
+                    android:text="Upload Now"
+                    app:icon="@drawable/ic_file_upload_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

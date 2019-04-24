@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:overScrollMode="never"
+    android:background="@color/purple_light"
+    tools:context=".FriendProfileView">
+
+    <FrameLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--For Good UI-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:background="@color/purple_dark"
+                android:layout_width="match_parent"
+                android:layout_height="205dp"/>
+
+            <LinearLayout
+                android:background="@color/purple_light"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profilePic"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/default_artist_art"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:id="@+id/name"
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"
+                android:text="Name"
+                android:gravity="center"
+                android:textColor="@color/white"
+                fontPath="fonts/GoogleSans_Bold.ttf"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingPrefix" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="6dp"
+                app:cardBackgroundColor="#FFF"
+                app:cardMaxElevation="6dp"
+                app:cardElevation="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:padding="10dp"
+                    android:id="@+id/details_layout"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/followers_count"
+                            fontPath="fonts/GoogleSans_Bold.ttf"
+                            android:textColor="#212121"
+                            android:textSize="20sp"
+                            android:text="..."
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:ignore="MissingPrefix" />
+
+                        <TextView
+                            android:text="Followers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/following_count"
+                            fontPath="fonts/GoogleSans_Bold.ttf"
+                            android:textColor="#212121"
+                            android:textSize="20sp"
+                            android:text="..."
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:ignore="MissingPrefix" />
+
+                        <TextView
+                            android:text="Following"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="6dp"
+                app:cardBackgroundColor="#FFF"
+                app:cardMaxElevation="6dp"
+                app:cardElevation="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/layout"
+                    android:layout_marginBottom="38dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:id="@+id/posts_view"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:padding="10dp"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/icon_password"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@drawable/ic_camera_roll_24dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            />
+
+                        <TextView
+                            android:text="View all posts"
+                            android:padding="10dp"
+                            android:textSize="17sp"
+                            android:layout_toEndOf="@id/icon_password"
+                            android:layout_centerInParent="true"
+                            android:layout_toStartOf="@+id/edit_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/edit_password"
+                            android:layout_toRightOf="@id/icon_password" />
+
+                        <ImageView
+                            android:padding="10dp"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/show_posts"
+                            android:layout_alignParentEnd="true"
+                            app:srcCompat="@drawable/ic_chevron_right_24dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/songs_view"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_margin="10dp"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/icon_type"
+                            android:tint="@color/purple_dark"
+                            android:layout_alignParentStart="true"
+                            app:srcCompat="@mipmap/music"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentLeft="true"
+                            />
+
+                        <TextView
+                            android:text="View all songs"
+                            android:padding="10dp"
+                            android:textSize="17sp"
+                            android:layout_toEndOf="@id/icon_type"
+                            android:layout_centerInParent="true"
+                            android:layout_toStartOf="@+id/edit_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/edit_type"
+                            android:layout_toRightOf="@id/icon_type" />
+
+                        <ImageView
+                            android:padding="10dp"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/show_songs"
+                            android:layout_alignParentEnd="true"
+                            app:srcCompat="@drawable/ic_chevron_right_24dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_button"
+            android:text="follow"
+            app:iconPadding="5dp"
+            android:visibility="gone"
+            app:iconSize="20dp"
+            android:layout_gravity="center|bottom"
+            app:cornerRadius="30dp"
+            android:padding="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+</ScrollView>

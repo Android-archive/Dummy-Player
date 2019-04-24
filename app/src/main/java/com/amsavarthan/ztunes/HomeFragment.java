@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import es.dmoral.toasty.Toasty;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +31,6 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,9 +39,6 @@ import com.marcoscg.dialogsheet.DialogSheet;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
-import static com.amsavarthan.ztunes.NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
 
 public class HomeFragment extends Fragment {
 
@@ -58,8 +54,8 @@ public class HomeFragment extends Fragment {
     private NewReleaseAdapter mNewReleaseAdapter;
     private RecentsAdapter mRecentsAdapter;
     private ArtistAdapter mArtistsAdapter;
-    private TextView view_all;
-    private static TextView clear_all_recents;
+    private TextView view_all,view_all_artists;
+    private static TextView clear_all_recents,view_all_recents;
     private FirebaseFirestore mFirestore;
     private ProgressBar pbar1;
     private View view;
@@ -73,9 +69,16 @@ public class HomeFragment extends Fragment {
         return view=inflater.inflate(R.layout.fragment_home,container,false);
     }
 
+    private static void clearLightStatusBar(Activity activity){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            activity.getWindow().setStatusBarColor(Color.parseColor("#ffffff"));
+        }
+    }
+
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        clearLightStatusBar(getActivity());
 
         MainActivity.mCurrentFragment="home";
         mNewReleaseRecyclerView=view.findViewById(R.id.mNewReleasesRecyclerView);
@@ -88,6 +91,8 @@ public class HomeFragment extends Fragment {
         artistsList.clear();
 
         view_all=view.findViewById(R.id.view_all);
+        view_all_artists=view.findViewById(R.id.view_all_artists);
+        view_all_recents=view.findViewById(R.id.view_all_recents);
         clear_all_recents=view.findViewById(R.id.clear_all_recents);
 
         chip1=view.findViewById(R.id.c1);
@@ -130,7 +135,7 @@ public class HomeFragment extends Fragment {
         mNewReleaseRecyclerView.setAdapter(mNewReleaseAdapter);
 
         mArtistsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mArtistsAdapter=new ArtistAdapter(artistsList,view.getContext());
+        mArtistsAdapter=new ArtistAdapter(artistsList,view.getContext(),false);
 
         LinearLayoutManager layoutManager1=new LinearLayoutManager(view.getContext());
         layoutManager1.setOrientation(RecyclerView.HORIZONTAL);
@@ -150,6 +155,37 @@ public class HomeFragment extends Fragment {
         mRecentsRecyclerView.setLayoutManager(layoutManager2);
         mRecentsRecyclerView.setHasFixedSize(true);
         mRecentsRecyclerView.setAdapter(mRecentsAdapter);
+
+        view_all_recents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment=new Artists_FullView();
+
+                ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .replace(R.id.container,fragment,"Artists_FullView")
+                        .addToBackStack(null)
+                        .commit();
+
+                MainActivity.mCurrentFragment="artists_fullview";
+            }
+        });
+
+        view_all_artists.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment=new Artists_FullView();
+
+                ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .replace(R.id.container,fragment,"Artists_FullView")
+                        .addToBackStack(null)
+                        .commit();
+
+                MainActivity.mCurrentFragment="artists_fullview";
+
+            }
+        });
 
         clear_all_recents.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +228,7 @@ public class HomeFragment extends Fragment {
 
     private void addArtists() {
 
+        view.findViewById(R.id.pbar2).setVisibility(View.VISIBLE);
         FirebaseFirestore.getInstance()
                 .collection("Verified Artists")
                 .get()
@@ -203,10 +240,21 @@ public class HomeFragment extends Fragment {
 
                             if(documentChange.getType()== DocumentChange.Type.ADDED){
 
-                                Artist artist=documentChange.getDocument().toObject(Artist.class);
-                                artistsList.add(artist);
-                                mArtistsAdapter.notifyDataSetChanged();
+                                if(artistsList.size()<=3) {
 
+                                    view.findViewById(R.id.pbar2).setVisibility(View.GONE);
+                                    Artist artist = documentChange.getDocument().toObject(Artist.class);
+                                    artistsList.add(artist);
+                                    mArtistsAdapter.notifyDataSetChanged();
+
+                                }else if(artistsList.size()==4){
+
+                                    view.findViewById(R.id.pbar2).setVisibility(View.GONE);
+                                    Artist artist = new Artist("default","none");
+                                    artistsList.add(artist);
+                                    mArtistsAdapter.notifyDataSetChanged();
+
+                                }
                             }
 
                         }
@@ -253,13 +301,13 @@ public class HomeFragment extends Fragment {
 
                                     }else if(newReleaseList.size()==4){
 
-                                        Songs songs = new Songs("more","","","","",String.valueOf(count), "");
+                                        Songs songs = new Songs("more","","","","",String.valueOf(count), "", "");
                                         newReleaseList.add(songs);
 
                                     }
 
                                 }else{
-                                    Songs newRelease=new Songs("Default", "", "","","","yes", "");
+                                    Songs newRelease=new Songs("Default", "", "","","","yes", "", "");
                                     newReleaseList.add(newRelease);
                                     view_all.setVisibility(View.GONE);
                                     view_all.startAnimation(fade_out);
@@ -291,10 +339,12 @@ public class HomeFragment extends Fragment {
             default_layout.setVisibility(View.GONE);
         }
 
-        if(recentsViewModel.getRecentsCount()>0){
-            if(clear_all_recents.getVisibility()!=View.VISIBLE){
-                clear_all_recents.setVisibility(View.VISIBLE);
-            }
+        if(recentsViewModel.getRecentsCount()>0 && recentsViewModel.getRecentsCount()<6){
+            clear_all_recents.setVisibility(View.VISIBLE);
+            view_all_recents.setVisibility(View.GONE);
+        }else{
+            clear_all_recents.setVisibility(View.GONE);
+            view_all_recents.setVisibility(View.VISIBLE);
         }
     }
 
@@ -306,6 +356,7 @@ public class HomeFragment extends Fragment {
             default_layout.setVisibility(View.VISIBLE);
         }
 
+        view_all_recents.setVisibility(View.GONE);
         clear_all_recents.setVisibility(View.GONE);
 
     }
@@ -314,11 +365,17 @@ public class HomeFragment extends Fragment {
 
         List<RecentsEntity> recents=recentsViewModel.getAllRecents();
 
-        if(recentsViewModel.getRecentsCount()>0){
-            if(clear_all_recents.getVisibility()!=View.VISIBLE){
-                clear_all_recents.setVisibility(View.VISIBLE);
+        if(recentsViewModel.getRecentsCount()>0 && recentsViewModel.getRecentsCount()<6){
+            clear_all_recents.setVisibility(View.VISIBLE);
+            view_all_recents.setVisibility(View.GONE);
+        }else{
+            if(recentsViewModel.getRecentsCount()==0){
+                clear_all_recents.setVisibility(View.GONE);
+                view_all_recents.setVisibility(View.GONE);
+            }else{
+                clear_all_recents.setVisibility(View.GONE);
+                view_all_recents.setVisibility(View.VISIBLE);
             }
-
         }
 
         if(recentsViewModel.getRecentsCount()>0){
@@ -348,6 +405,9 @@ public class HomeFragment extends Fragment {
 
             }else{
 
+                clear_all_recents.setVisibility(View.GONE);
+                view_all_recents.setVisibility(View.VISIBLE);
+
                 for(int i=0;i<=6;i++){
 
                     try {
@@ -358,7 +418,7 @@ public class HomeFragment extends Fragment {
                                 , recents.get(i).getArtist()
                                 , recents.get(i).getLink()
                                 , recents.get(i).getGenre()
-                                , recents.get(i).getArt());
+                                ,recents.get(i).getArt());
 
                         recentsList.add(recentsEntity);
                         mRecentsAdapter.notifyDataSetChanged();
@@ -376,14 +436,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(List<RecentsEntity> recentsList) {
                 if(recentsViewModel.getRecentsCount()>0 && recentsViewModel.getRecentsCount()<=6){
-                    if(clear_all_recents.getVisibility()!=View.VISIBLE){
-                        clear_all_recents.setVisibility(View.VISIBLE);
-                    }
+                    clear_all_recents.setVisibility(View.VISIBLE);
+                    view_all_recents.setVisibility(View.GONE);
                 }
                 if(recentsViewModel.getRecentsCount()<=6) {
                     mRecentsAdapter.setData(recentsList);
                 }else if(recentsViewModel.getRecentsCount()==7){
 
+                    view_all_recents.setVisibility(View.VISIBLE);
+                    clear_all_recents.setVisibility(View.GONE);
 
                     RecentsEntity recentsEntity=new RecentsEntity(0,"more","","","","", "");
                     recentsList.add(recentsEntity);

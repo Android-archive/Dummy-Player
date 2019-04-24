@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class NewRelease_FullView extends Fragment {
     private TextView title;
     private int count;
     private View view;
+    private SwipeRefreshLayout refreshLayout;
 
     @Nullable
     @Override
@@ -65,6 +67,8 @@ public class NewRelease_FullView extends Fragment {
         mNewReleaseRecyclerView.setAdapter(mNewReleaseAdapter);
 
         title.setText(R.string.please_wait);
+        setUpRefreshLayout();
+        refreshLayout.setRefreshing(true);
         addItems();
 
     }
@@ -79,18 +83,16 @@ public class NewRelease_FullView extends Fragment {
                         for(DocumentChange documentChange:queryDocumentSnapshots.getDocumentChanges()){
                             if(documentChange.getType()== DocumentChange.Type.ADDED){
 
-                                Animation fade_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_out);
                                 Animation fade_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
 
-                                view.findViewById(R.id.pbar).setVisibility(View.GONE);
-                                view.findViewById(R.id.pbar).startAnimation(fade_out);
+                                refreshLayout.setRefreshing(false);
 
                                 if(documentChange.getDocument().getString("new_release").equals("yes")) {
                                     Songs songs=documentChange.getDocument().toObject(Songs.class);
                                     newReleaseList.add(songs);
                                     count++;
                                 }else{
-                                    Songs newRelease=new Songs("Default", "", "","","","yes", "");
+                                    Songs newRelease=new Songs("Default", "", "","","","yes", "", "");
                                     newReleaseList.add(newRelease);
                                 }
 
@@ -107,10 +109,28 @@ public class NewRelease_FullView extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        refreshLayout.setRefreshing(false);
                         e.printStackTrace();
                     }
                 });
 
+
+    }
+
+    private void setUpRefreshLayout() {
+
+        refreshLayout=view.findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                count=0;
+                title.setText(R.string.please_wait);
+                refreshLayout.setRefreshing(true);
+                newReleaseList.clear();
+                mNewReleaseAdapter.notifyDataSetChanged();
+                addItems();
+            }
+        });
 
     }
 

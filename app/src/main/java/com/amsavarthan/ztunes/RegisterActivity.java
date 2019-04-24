@@ -39,7 +39,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marcoscg.dialogsheet.DialogSheet;
-import com.yalantis.ucrop.UCrop;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,7 @@ import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final String TAG = RegisterActivity.class.getSimpleName();
     private TextInputLayout nameLayout,emailLayout,passwordLayout;
     private TextInputEditText nameInput,emailInput,passwordInput;
     private FirebaseAuth mAuth;
@@ -137,6 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 userMap.put("date_of_creation", String.valueOf(System.currentTimeMillis()));
                                                 userMap.put("picture", "default");
                                                 userMap.put("account_type", "none");
+                                                userMap.put("approved", "false");
                                                 userMap.put("last_login", "");
 
                                                 mFirestore.collection("Users")
@@ -163,7 +166,10 @@ public class RegisterActivity extends AppCompatActivity {
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-
+                                                Toasty.error(RegisterActivity.this,"Some technical error occurred",Toasty.LENGTH_SHORT,true).show();
+                                                e.printStackTrace();
+                                                Log.e(TAG,e.getMessage());
+                                                progressDialog.dismiss();
                                             }
                                         });
 
@@ -189,6 +195,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                                     userMap.put("date_of_creation",String.valueOf(System.currentTimeMillis()));
                                                                     userMap.put("picture",uri.toString());
                                                                     userMap.put("last_login","");
+                                                                    userMap.put("approved", "false");
                                                                     userMap.put("account_type","none");
 
                                                                     mFirestore.collection("Users")
@@ -271,33 +278,37 @@ public class RegisterActivity extends AppCompatActivity {
             if(resultCode==RESULT_OK){
                 imageUri=data.getData();
 
-                UCrop.Options options = new UCrop.Options();
-                options.setCompressionFormat(Bitmap.CompressFormat.PNG);
-                options.setCompressionQuality(100);
-                options.setShowCropGrid(true);
-
-                UCrop.of(imageUri, Uri.fromFile(new File(getCacheDir(), "ztunes_user_profile_picture.png")))
-                        .withAspectRatio(1, 1)
-                        .withOptions(options)
+                CropImage.activity(imageUri)
+                        .setCropShape(CropImageView.CropShape.OVAL)
+                        .setActivityTitle("Crop Profile Picture")
+                        .setAllowRotation(true)
+                        .setAspectRatio(1,1)
+                        .setGuidelines(CropImageView.Guidelines.ON)
                         .start(this);
 
             }
         }
-        if (requestCode == UCrop.REQUEST_CROP) {
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                imageUri = UCrop.getOutput(data);
-                try {
+                imageUri = result.getUri();
+                profile_image.setImageURI(imageUri);
+                /*try {
                     File compressedFile= new Compressor(this).setCompressFormat(Bitmap.CompressFormat.PNG).setQuality(50).setMaxHeight(96).setMaxWidth(96).compressToFile(new File(imageUri.getPath()));
                     profile_image.setImageURI(Uri.fromFile(compressedFile));
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toasty.error(this, "Unable to compress: "+e.getLocalizedMessage(), Toasty.LENGTH_SHORT,true).show();
                     profile_image.setImageURI(imageUri);
-                }
-            } else if (resultCode == UCrop.RESULT_ERROR) {
-                Log.e("Error", "Crop error:" + UCrop.getError(data).getMessage());
+                }*/
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.e(TAG,error.getMessage());
             }
         }
+
 
     }
 }

@@ -90,6 +90,7 @@ public class Recents_FullView extends Fragment {
                                 mRecentsAdapter.notifyDataSetChanged();
                                 HomeFragment.ShowDefaultCard(view.getContext());
                                 mRecentsAdapter.notifyDataSetChanged();
+                                getActivity().finish();
                                 Toasty.success(view.getContext(),"Recents cleared",Toasty.LENGTH_SHORT,true).show();
                             }
                         })

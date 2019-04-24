@@ -1,6 +1,6 @@
 package com.amsavarthan.ztunes;
 
-public class Artist {
+public class Artist extends UserId{
 
     private String name,photo_link;
 
