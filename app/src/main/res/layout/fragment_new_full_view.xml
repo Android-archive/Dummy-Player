@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".NewRelease_FullView">
+    tools:context=".ui.fragments.NewRelease_FullView">
 
     <RelativeLayout
         android:padding="6dp"

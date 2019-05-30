@@ -22,5 +22,6 @@
     <color name="yellow_dark">#FDD835</color>
     <color name="black">#313131</color>
     <color name="white_light">#FDFDFD</color>
+    <color name="light_grey">#EEEEEE</color>
 
 </resources>

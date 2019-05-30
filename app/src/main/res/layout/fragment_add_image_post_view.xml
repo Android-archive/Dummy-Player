@@ -1,135 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    tools:context=".GenreView">
+    android:overScrollMode="never"
+    android:scrollbars="none"    tools:context=".ui.fragments.GenreView">
 
-    <RelativeLayout
-        android:padding="6dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/logo"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            app:fabSize="mini"
-            android:layout_margin="10dp"
-            app:srcCompat="@mipmap/new_icon"
-            android:tint="@color/purple_dark"
-            app:backgroundTint="@color/purple_light"
-            />
-
-        <TextView
-            android:text="New post"
-            android:layout_marginEnd="10dp"
-            android:layout_toEndOf="@+id/logo"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/logo"
-            android:layout_centerVertical="true"
-            fontPath="fonts/GoogleSans_Bold.ttf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#313131"
-            android:textSize="22sp"
-            tools:ignore="MissingPrefix"
-            />
-
-    </RelativeLayout>
-
-    <ScrollView
-        android:overScrollMode="never"
-        android:scrollbars="none"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <RelativeLayout
+            android:padding="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/logo"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:fabSize="mini"
+                android:layout_margin="10dp"
+                app:srcCompat="@mipmap/new_icon"
+                android:tint="@color/purple_dark"
+                app:backgroundTint="@color/purple_light"
+                />
+
+            <TextView
+                android:text="New post"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@+id/logo"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/logo"
+                android:layout_centerVertical="true"
+                fontPath="fonts/GoogleSans_Bold.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#313131"
+                android:textSize="22sp"
+                tools:ignore="MissingPrefix"
+                />
+
+        </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.cardview.widget.CardView
-                app:cardCornerRadius="19dp"
-                app:cardElevation="6dp"
+            <FrameLayout
+                android:id="@+id/pager_layout"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="340dp">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/pager"
+                    android:background="@color/colorPrimary"
+                    android:layout_gravity="top"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+                <RelativeLayout
+                    android:visibility="visible"
+                    android:id="@+id/indicator_holder"
+                    android:background="#20000000"
+                    android:layout_gravity="bottom"
+                    android:padding="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                        android:id="@+id/indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        app:dotsColor="@color/white"
+                        app:dotsCornerRadius="8dp"
+                        app:dotsSize="6dp"
+                        app:dotsSpacing="4dp"
+                        app:dotsWidthFactor="2.5"
+                        />
+
+                </RelativeLayout>
+
+            </FrameLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <RelativeLayout
+            android:id="@+id/edit_layout"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_marginEnd="10dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@color/purple_light"
-                android:foreground="?selectableItemBackground"
-                android:layout_marginStart="8dp"
-                app:cardBackgroundColor="@color/purple_light"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="5dp"
-                app:cardMaxElevation="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <FrameLayout
-                    android:id="@+id/add_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="360dp">
-
-                    <ImageView
-                        android:id="@+id/imageview"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/default_post"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                    <LinearLayout
-                        android:layout_gravity="bottom"
-                        android:background="#60000000"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:textSize="16sp"
-                            android:textColor="@color/white"
-                            android:text="Click here to add image"
-                            android:padding="15dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/text_layout"
-                android:layout_margin="10dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter caption">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textEditText"
-                    android:inputType="text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/upload"
-                app:icon="@drawable/ic_file_upload_black_24dp"
-                app:iconTint="@color/white"
-                android:layout_gravity="end"
-                android:text="upload"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
+                android:background="?selectableItemBackground"
+                android:id="@+id/edit_delete"
+                android:layout_alignParentEnd="true"
+                android:padding="10dp"
+                app:srcCompat="@drawable/ic_delete_black_24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                 />
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp" />
 
-        </LinearLayout>
+            <ImageView
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?selectableItemBackground"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/edit_delete"
+                android:layout_toLeftOf="@+id/edit_delete"
+                android:id="@+id/edit_crop"
+                android:padding="10dp"
+                app:srcCompat="@drawable/ic_crop_rotate_black_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp" />
 
-    </ScrollView>
 
-</LinearLayout>
+            <ImageView
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?selectableItemBackground"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/edit_crop"
+                android:layout_toLeftOf="@+id/edit_crop"
+                android:id="@+id/edit_add"
+                android:padding="10dp"
+                app:srcCompat="@drawable/ic_add_black_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp" />
+
+        </RelativeLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_layout"
+            android:layout_margin="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter caption">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/post_desc"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/upload"
+            android:layout_gravity="end"
+            app:icon="@drawable/ic_file_upload_black_24dp"
+            app:iconTint="@color/white"
+            android:text="upload"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            />
+
+
+    </LinearLayout>
+
+</ScrollView>

@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:overScrollMode="never"
     android:scrollbars="none"
-    tools:context=".AddAlbum">
+    tools:context=".ui.fragments.AddAlbum">
 
     <LinearLayout
         android:orientation="vertical"

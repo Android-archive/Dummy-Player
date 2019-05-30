@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:overScrollMode="never"
     android:scrollbars="none"
-    tools:context=".AddSong">
+    tools:context=".ui.fragments.AddSong">
 
     <LinearLayout
         android:orientation="vertical"

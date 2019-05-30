@@ -8,7 +8,7 @@
     android:background="@color/white"
     android:scrollbars="none"
     android:overScrollMode="never"
-    tools:context=".RegisterActivity">
+    tools:context=".ui.activities.RegisterActivity">
 
     <LinearLayout
         android:orientation="vertical"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".GenreView">
+    tools:context=".ui.fragments.GenreView">
 
     <LinearLayout
         android:orientation="vertical"
@@ -120,7 +120,7 @@
         app:backgroundTint="@color/colorAccent"
         app:cornerRadius="28dp"
         app:icon="@drawable/ic_add_24dp"
-        app:layout_behavior="com.amsavarthan.ztunes.MaterialButtonBehaviour"
+        app:layout_behavior="com.amsavarthan.ztunes.ui.customviews.MaterialButtonBehaviour"
         android:layout_height="65dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

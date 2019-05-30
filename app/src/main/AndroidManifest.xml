@@ -4,15 +4,14 @@
     package="com.amsavarthan.ztunes">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-sdk tools:overrideLibrary="github.com.st235.lib_expandablebottombar"/>
 
     <application
@@ -22,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SplashScreen"
+        <activity android:name=".ui.activities.SplashScreen"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,26 +30,44 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AccountTypeSelection"
+            android:name=".ui.activities.AccountTypeSelection"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.activities.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:name=".ui.activities.LoginActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait" />
-
         <meta-data
             android:name="firebase_performance_logcat_enabled"
             android:value="true" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <service
+            android:name=".music.AudioStreamingService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver android:name=".music.AudioStreamingReceiver">
+            <intent-filter>
+                <action android:name="com.amsavarthan.close" />
+                <action android:name="com.amsavarthan.pause" />
+                <action android:name="com.amsavarthan.next" />
+                <action android:name="com.amsavarthan.play" />
+                <action android:name="com.amsavarthan.previous" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

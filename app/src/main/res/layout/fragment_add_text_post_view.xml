@@ -6,40 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".GenreView">
-
-    <RelativeLayout
-        android:padding="6dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/logo"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            app:fabSize="mini"
-            android:layout_margin="10dp"
-            app:srcCompat="@mipmap/new_icon"
-            android:tint="@color/purple_dark"
-            app:backgroundTint="@color/purple_light"
-            />
-
-        <TextView
-            android:text="New post"
-            android:layout_marginEnd="10dp"
-            android:layout_toEndOf="@+id/logo"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/logo"
-            android:layout_centerVertical="true"
-            fontPath="fonts/GoogleSans_Bold.ttf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#313131"
-            android:textSize="22sp"
-            tools:ignore="MissingPrefix"
-            />
-
-    </RelativeLayout>
+    tools:context=".ui.fragments.GenreView">
 
     <ScrollView
         android:overScrollMode="never"
@@ -51,6 +18,39 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:padding="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/logo"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    app:fabSize="mini"
+                    android:layout_margin="10dp"
+                    app:srcCompat="@mipmap/new_icon"
+                    android:tint="@color/purple_dark"
+                    app:backgroundTint="@color/purple_light"
+                    />
+
+                <TextView
+                    android:text="New post"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toEndOf="@+id/logo"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@+id/logo"
+                    android:layout_centerVertical="true"
+                    fontPath="fonts/GoogleSans_Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#313131"
+                    android:textSize="22sp"
+                    tools:ignore="MissingPrefix"
+                    />
+
+            </RelativeLayout>
 
             <androidx.cardview.widget.CardView
                 app:cardCornerRadius="19dp"
@@ -129,7 +129,7 @@
                         android:id="@+id/fab1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#0E5CAD" />
 
@@ -137,7 +137,7 @@
                         android:id="@+id/fab2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#F55555" />
 
@@ -145,7 +145,7 @@
                         android:id="@+id/fab3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#F761A1" />
 
@@ -153,7 +153,7 @@
                         android:id="@+id/fab4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#43CBFF" />
 
@@ -162,7 +162,7 @@
                         android:id="@+id/fab5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#623AA2" />
 
@@ -170,7 +170,7 @@
                         android:id="@+id/fab6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#002661" />
 
@@ -179,7 +179,7 @@
                         android:id="@+id/fab7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#6018DC" />
 
@@ -187,7 +187,7 @@
                         android:id="@+id/fab8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#3CD500" />
 
@@ -195,7 +195,7 @@
                         android:id="@+id/fab9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#3C8CE7" />
 
@@ -203,49 +203,49 @@
                         android:id="@+id/fab10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#F8D800" />
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab11"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#EA5455" />
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#43E97B" />
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab13"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#2575FC" />
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab14"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#F83600" />
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab15"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#537895" />
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#CC208E" />
 
@@ -253,7 +253,7 @@
                         android:id="@+id/fab17"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#FA709A" />
 
@@ -261,7 +261,7 @@
                         android:id="@+id/fab18"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#32CCBC" />
 
@@ -269,7 +269,7 @@
                         android:id="@+id/fab19"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="10dp"
                         android:padding="16dp"
                         app:backgroundTint="#C32BAC" />
 
