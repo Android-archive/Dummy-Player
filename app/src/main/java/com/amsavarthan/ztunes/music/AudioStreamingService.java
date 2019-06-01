@@ -33,10 +33,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.palette.graphics.Palette;
 
 import com.amsavarthan.ztunes.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
 
@@ -177,13 +182,13 @@ public class AudioStreamingService extends Service implements NotificationManage
             Notification notification = null;
             if (pendingIntent != null) {
                 notification = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                        .setSmallIcon(R.drawable.player)
+                        .setSmallIcon(R.mipmap.music)
                         .setContentIntent(pendingIntent)
                         .setContentTitle(songName)
                         .build();
             } else {
                 notification = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                        .setSmallIcon(R.drawable.player)
+                        .setSmallIcon(R.mipmap.music)
                         .setContentTitle(songName)
                         .build();
             }
@@ -223,9 +228,9 @@ public class AudioStreamingService extends Service implements NotificationManage
                     notification.bigContentView.setImageViewBitmap(R.id.player_album_art, albumArt);
                 }
             } else {
-                notification.contentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_default_album_art);
+                notification.contentView.setImageViewResource(R.id.player_album_art, R.drawable.default_song_art);
                 if (supportBigNotifications) {
-                    notification.bigContentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_default_album_art);
+                    notification.bigContentView.setImageViewResource(R.id.player_album_art, R.drawable.default_song_art);
                 }
             }
             notification.contentView.setViewVisibility(R.id.player_progress_bar, View.GONE);
@@ -281,7 +286,7 @@ public class AudioStreamingService extends Service implements NotificationManage
     @NonNull
     private String getNotificationChannelId() {
         NotificationChannel channel = new NotificationChannel(TAG, "Playback",
-                android.app.NotificationManager.IMPORTANCE_DEFAULT);
+                android.app.NotificationManager.IMPORTANCE_MIN);
         channel.enableLights(true);
         channel.setLightColor(Color.BLUE);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);

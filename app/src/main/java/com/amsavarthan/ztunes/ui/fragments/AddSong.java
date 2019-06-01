@@ -3,6 +3,7 @@ package com.amsavarthan.ztunes.ui.fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -391,6 +392,13 @@ public class AddSong extends Fragment {
                                                                             Map<String,Object> songLinkMap=new HashMap<>();
                                                                             songLinkMap.put("link",uri.toString());
 
+                                                                            MediaMetadataRetriever metadataRetriever=new MediaMetadataRetriever();
+                                                                            metadataRetriever.setDataSource(getContext(),audioUri);
+                                                                            long duration= Long.parseLong(metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                                                                            metadataRetriever.release();
+
+                                                                            songLinkMap.put("duration",duration);
+
                                                                             mFirestore.collection("Users")
                                                                                     .document(mAuth.getCurrentUser().getUid())
                                                                                     .collection("songs")
@@ -556,6 +564,13 @@ public class AddSong extends Fragment {
 
                                                                                                             Map<String,Object> songLinkMap=new HashMap<>();
                                                                                                             songLinkMap.put("link",uri.toString());
+
+                                                                                                            MediaMetadataRetriever metadataRetriever=new MediaMetadataRetriever();
+                                                                                                            metadataRetriever.setDataSource(getContext(),audioUri);
+                                                                                                            long duration= Long.parseLong(metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                                                                                                            metadataRetriever.release();
+
+                                                                                                            songLinkMap.put("duration",duration);
 
                                                                                                             mFirestore.collection("Users")
                                                                                                                     .document(mAuth.getCurrentUser().getUid())

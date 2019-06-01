@@ -326,13 +326,13 @@ public class HomeFragment extends Fragment {
 
                                     }else if(newReleaseList.size()==4){
 
-                                        Songs songs = new Songs("more","","","","",String.valueOf(count), "", "");
+                                        Songs songs = new Songs("more","","","","",String.valueOf(count), "", "",0);
                                         newReleaseList.add(songs);
 
                                     }
 
                                 }else{
-                                    Songs newRelease=new Songs("Default", "", "","","","yes", "", "");
+                                    Songs newRelease=new Songs("Default", "", "","","","yes", "", "",0);
                                     newReleaseList.add(newRelease);
                                     view_all.setVisibility(View.GONE);
                                     view_all.startAnimation(fade_out);
@@ -418,7 +418,8 @@ public class HomeFragment extends Fragment {
                                 , recents.get(i).getArtist()
                                 , recents.get(i).getLink()
                                 , recents.get(i).getGenre()
-                                ,recents.get(i).getArt());
+                                ,recents.get(i).getArt()
+                        ,recents.get(i).getDuration());
 
                         recentsList.add(recentsEntity);
                         mRecentsAdapter.notifyDataSetChanged();
@@ -443,7 +444,8 @@ public class HomeFragment extends Fragment {
                                 , recents.get(i).getArtist()
                                 , recents.get(i).getLink()
                                 , recents.get(i).getGenre()
-                                ,recents.get(i).getArt());
+                                ,recents.get(i).getArt()
+                        ,recents.get(i).getDuration());
 
                         recentsList.add(recentsEntity);
                         mRecentsAdapter.notifyDataSetChanged();
@@ -471,7 +473,7 @@ public class HomeFragment extends Fragment {
                     view_all_recents.setVisibility(View.VISIBLE);
                     clear_all_recents.setVisibility(View.GONE);
 
-                    RecentsEntity recentsEntity=new RecentsEntity(0,"more","","","","", "");
+                    RecentsEntity recentsEntity=new RecentsEntity(0,"more","","","","", "",0);
                     recentsList.add(recentsEntity);
                     mRecentsAdapter.notifyDataSetChanged();
 

@@ -63,6 +63,7 @@ public class Recents_FullAdapter extends RecyclerView.Adapter<Recents_FullAdapte
                 bundle.putString("album_name", recent.getAlbum());
                 bundle.putString("genre_name", recent.getGenre());
                 bundle.putString("link", recent.getLink());
+                bundle.putLong("duration", recent.getDuration());
 
                 Fragment fragment=new SongDetails();
                 fragment.setArguments(bundle);
@@ -106,6 +107,7 @@ public class Recents_FullAdapter extends RecyclerView.Adapter<Recents_FullAdapte
                     metaData.setMediaAlbum(recent.getAlbum());
                     metaData.setMediaArtist(recent.getArtist());
                     metaData.setMediaArt(recent.getArt());
+                    metaData.setMediaDuration(recent.getDuration());
 
                     listItemListener.onItemClickListener(metaData);
 

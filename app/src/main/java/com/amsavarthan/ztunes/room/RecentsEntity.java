@@ -1,8 +1,5 @@
 package com.amsavarthan.ztunes.room;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -15,7 +12,7 @@ public class RecentsEntity {
     }
 
     @Ignore
-    public RecentsEntity(int id, String name, String album, String artist, String link, String genre, String art) {
+    public RecentsEntity(int id, String name, String album, String artist, String link, String genre, String art, long duration) {
         this.id = id;
         this.name = name;
         this.album = album;
@@ -23,6 +20,7 @@ public class RecentsEntity {
         this.link = link;
         this.genre = genre;
         this.art = art;
+        this.duration = duration;
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -45,6 +43,9 @@ public class RecentsEntity {
 
     @ColumnInfo(name="art")
     private String art;
+
+    @ColumnInfo(name="duration")
+    private long duration;
 
     public int getId() {
         return id;
@@ -102,4 +103,11 @@ public class RecentsEntity {
         this.art = art;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
 }

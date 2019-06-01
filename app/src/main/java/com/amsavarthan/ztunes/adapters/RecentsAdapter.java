@@ -28,8 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amsavarthan.ztunes.music.MediaMetaData;
 
-
-
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHolder> {
 
     private List<RecentsEntity> recentsList;
@@ -63,6 +61,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 bundle.putString("album_name", recent.getAlbum());
                 bundle.putString("genre_name", recent.getGenre());
                 bundle.putString("link", recent.getLink());
+                bundle.putLong("duration", recent.getDuration());
 
                 Fragment fragment=new SongDetails();
                 fragment.setArguments(bundle);
@@ -108,6 +107,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 bundle.putString("album_name", recent.getAlbum());
                 bundle.putString("genre_name", recent.getGenre());
                 bundle.putString("link", recent.getLink());
+                bundle.putLong("duration", recent.getDuration());
 
                 Fragment fragment=new SongDetails();
                 fragment.setArguments(bundle);
@@ -134,6 +134,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                     metaData.setMediaUrl(recent.getLink());
                     metaData.setMediaAlbum(recent.getAlbum());
                     metaData.setMediaArtist(recent.getArtist());
+                    metaData.setMediaDuration(recent.getDuration());
                     metaData.setMediaArt(recent.getArt());
 
                     listItemListener.onItemClickListener(metaData);
@@ -154,6 +155,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.ViewHold
                 bundle.putString("album_name", recent.getAlbum());
                 bundle.putString("genre_name", recent.getGenre());
                 bundle.putString("link", recent.getLink());
+                bundle.putLong("duration", recent.getDuration());
 
                 Fragment fragment=new SongDetails();
                 fragment.setArguments(bundle);

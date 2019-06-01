@@ -86,6 +86,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     bundle.putString("album_name", release.getAlbum());
                     bundle.putString("genre_name", release.getGenre());
                     bundle.putString("link", release.getLink());
+                    bundle.putLong("duration", release.getDuration());
 
                     Fragment fragment=new SongDetails();
                     fragment.setArguments(bundle);
@@ -113,6 +114,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                         recentsEntity.setAlbum(release.getAlbum());
                         recentsEntity.setArtist(release.getArtist());
                         recentsEntity.setArt(release.getArt());
+                        recentsEntity.setDuration(release.getDuration());
 
                         MediaMetaData metaData = new MediaMetaData();
                         metaData.setMediaId(release.getName());
@@ -120,6 +122,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                         metaData.setMediaUrl(release.getLink());
                         metaData.setMediaAlbum(release.getAlbum());
                         metaData.setMediaArtist(release.getArtist());
+                        metaData.setMediaDuration(release.getDuration());
                         metaData.setMediaArt(release.getArt());
 
                         if(!type.equals("manage_view_all")) {
@@ -135,14 +138,9 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                             HomeFragment.HideDefaultCard(context);
                             listItemListener.onItemClickListener(metaData);
 
-                            //MainActivity.startSong(activity,context, recentsEntity);
                         }else{
-
                             HomeFragment.HideDefaultCard(context);
                             listItemListener.onItemClickListener(metaData);
-
-                            //MainActivity.startSong(activity,context, recentsEntity);
-
                         }
 
                     }

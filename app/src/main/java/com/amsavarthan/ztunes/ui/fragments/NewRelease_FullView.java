@@ -107,7 +107,7 @@ public class NewRelease_FullView extends Fragment {
                                     newReleaseList.add(songs);
                                     count++;
                                 }else{
-                                    Songs newRelease=new Songs("Default", "", "","","","yes", "", "");
+                                    Songs newRelease=new Songs("Default", "", "","","","yes", "", "", 0);
                                     newReleaseList.add(newRelease);
                                 }
 

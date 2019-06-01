@@ -143,7 +143,6 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
                 mState = PlaybackStateCompat.STATE_BUFFERING;
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setDataSource(source);
-
                 mMediaPlayer.prepareAsync();
                 mWifiLock.acquire();
 

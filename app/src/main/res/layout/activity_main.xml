@@ -150,18 +150,19 @@
 
             </androidx.cardview.widget.CardView>
 
-            <SeekBar
+            <com.amsavarthan.ztunes.ui.customviews.Slider
                 android:layout_below="@+id/art_holder"
-                android:id="@+id/seekbar"
-                android:progressBackgroundTint="@color/white"
-                android:layout_marginTop="20dp"
+                android:id="@+id/slider"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
 
             <RelativeLayout
                 android:id="@+id/timeLayout"
                 android:padding="10dp"
-                android:layout_below="@+id/seekbar"
+                android:layout_below="@+id/slider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -196,19 +197,33 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:background="?selectableItemBackgroundBorderless"
-                    android:id="@+id/prev"
-                    android:tint="@color/white"
-                    app:srcCompat="@drawable/ic_skip_previous_black_24dp"
+                    android:id="@+id/shuffle"
+                    android:tint="#60FFFFFF"
+                    app:srcCompat="@drawable/ic_shuffle_black_24dp"
                     android:padding="15dp"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     />
 
+                <ImageView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:id="@+id/prev"
+                    android:tint="@color/white"
+                    app:srcCompat="@drawable/ic_skip_previous_black_24dp"
+                    android:padding="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginRight="5dp" />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/playPauseFab"
-                    android:layout_margin="10dp"
                     app:srcCompat="@drawable/ic_play_arrow_24dp"
                     android:tint="@color/white"
+                    android:padding="16dp"
+                    android:layout_gravity="center"
                     app:backgroundTint="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -216,10 +231,22 @@
                 <ImageView
                     android:clickable="true"
                     android:focusable="true"
+                    android:layout_marginStart="5dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:id="@+id/next"
                     android:tint="@color/white"
                     app:srcCompat="@drawable/ic_skip_next_black_24dp"
+                    android:padding="15dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="5dp" />
+
+                <ImageView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:id="@+id/repeat"
+                    app:srcCompat="@drawable/ic_repeat_one_trans_white_24dp"
                     android:padding="15dp"
                     android:layout_width="60dp"
                     android:layout_height="60dp"

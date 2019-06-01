@@ -9,9 +9,20 @@ package com.amsavarthan.ztunes.music;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -33,6 +44,7 @@ public class AudioStreamingManager extends StreamingManager {
     private MediaMetaData currentAudio;
     private List<MediaMetaData> mediaList = new ArrayList<>();
     public static volatile Handler applicationHandler = null;
+    private MediaMetaData repeatSongData;
 
 
     public static AudioStreamingManager getInstance(Context context) {
@@ -72,6 +84,43 @@ public class AudioStreamingManager extends StreamingManager {
         return playMultiple;
     }
 
+    public void setRepeatSong(MediaMetaData mediaMetaData){
+
+        this.repeatSongData=mediaMetaData;
+        if(repeatSongData!=null){
+
+            Gson gson=new Gson();
+            String json=gson.toJson(repeatSongData);
+            context.getSharedPreferences("playback",Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("repeat",json)
+                    .apply();
+
+        }
+
+    }
+
+    public MediaMetaData getRepeatSong(){
+
+        Gson gson=new Gson();
+        String json=context.getSharedPreferences("playback",Context.MODE_PRIVATE)
+                .getString("repeat",null);
+        if(json!=null) {
+            Type type = new TypeToken<MediaMetaData>() {
+            }.getType();
+            MediaMetaData repeatSong = gson.fromJson(json, type);
+            setRepeatSong(repeatSong);
+            return repeatSong;
+        }else{
+            return null;
+        }
+
+    }
+
+    public boolean getIsRepeatSong(){
+        return repeatSongData != null;
+    }
+
     public void setPlayMultiple(boolean playMultiple) {
         this.playMultiple = playMultiple;
     }
@@ -92,12 +141,47 @@ public class AudioStreamingManager extends StreamingManager {
         if (this.mediaList != null) {
             this.mediaList.clear();
             this.mediaList.addAll(currentAudioList);
+
+            Gson gson=new Gson();
+            String json=gson.toJson(currentAudioList);
+            context.getSharedPreferences("playback",Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("queue",json)
+                    .apply();
+
+        }
+    }
+
+    public List<MediaMetaData> getMediaList() {
+        Gson gson=new Gson();
+        String json=context.getSharedPreferences("playback",Context.MODE_PRIVATE)
+                .getString("queue",null);
+        if(json!=null) {
+            Type type = new TypeToken<ArrayList<MediaMetaData>>() {
+            }.getType();
+            List<MediaMetaData> mediaMetaDataList = gson.fromJson(json, type);
+            setMediaList(mediaMetaDataList);
+            if (mediaMetaDataList != null) {
+                return gson.fromJson(json, type);
+            } else {
+                return new ArrayList<>();
+            }
+        }else{
+            return new ArrayList<>();
         }
     }
 
     public void clearList() {
         if (this.mediaList != null && mediaList.size() > 0) {
             this.mediaList.clear();
+            context.getSharedPreferences("playback",Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("queue",null)
+                    .apply();
+            context.getSharedPreferences("playback",Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("repeat",null)
+                    .apply();
             this.index = 0;
             this.onPause();
         }
@@ -111,9 +195,16 @@ public class AudioStreamingManager extends StreamingManager {
         if (playMultiple && !isMediaListEmpty()) {
             index = mediaList.indexOf(infoData);
         }
-        if (this.currentAudio != null && this.currentAudio.getMediaId().equalsIgnoreCase(infoData.getMediaId()) && instance.audioPlayback != null && instance.audioPlayback.isPlaying()) {
-            onPause();
-        } else {
+        if(repeatSongData==null) {
+            if (this.currentAudio != null && this.currentAudio.getMediaId().equalsIgnoreCase(infoData.getMediaId()) && instance.audioPlayback != null && instance.audioPlayback.isPlaying()) {
+                onPause();
+            } else {
+                this.currentAudio = infoData;
+                handlePlayRequest();
+                if (currentSessionCallback != null)
+                    currentSessionCallback.playCurrent(index, currentAudio);
+            }
+        }else{
             this.currentAudio = infoData;
             handlePlayRequest();
             if (currentSessionCallback != null)
@@ -238,9 +329,23 @@ public class AudioStreamingManager extends StreamingManager {
                 if (instance.currentSessionCallback != null) {
                     instance.currentSessionCallback.playSongComplete();
                 }
-                instance.onSkipToNext();
-            } else {
-                instance.handleStopRequest(null);
+
+                if(instance.repeatSongData!=null){
+                    instance.onPlay(instance.repeatSongData);
+                    instance.repeatSongData=null;
+                }else{
+                    instance.onSkipToNext();
+                }
+
+            }else{
+
+                if(instance.repeatSongData!=null){
+                    instance.onPlay(instance.repeatSongData);
+                    instance.repeatSongData=null;
+                }else{
+                    instance.handleStopRequest(null);
+                }
+
             }
         }
 

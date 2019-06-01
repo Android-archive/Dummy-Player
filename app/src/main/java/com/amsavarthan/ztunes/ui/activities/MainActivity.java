@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
@@ -15,6 +16,8 @@ import androidx.annotation.NonNull;
 import com.amsavarthan.ztunes.music.AudioStreamingManager;
 import com.amsavarthan.ztunes.music.CurrentSessionCallback;
 import com.amsavarthan.ztunes.music.MediaMetaData;
+import com.amsavarthan.ztunes.ui.customviews.LineProgress;
+import com.amsavarthan.ztunes.ui.customviews.Slider;
 import com.amsavarthan.ztunes.utils.NetworkUtil;
 import com.amsavarthan.ztunes.R;
 import com.amsavarthan.ztunes.ui.fragments.FeedView;
@@ -63,7 +66,7 @@ import java.util.List;
 import static com.amsavarthan.ztunes.utils.NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
 
 
-public class MainActivity extends AppCompatActivity implements CurrentSessionCallback {
+public class MainActivity extends AppCompatActivity implements CurrentSessionCallback, Slider.OnValueChangedListener {
 
     public static String mCurrentFragment;
     public static BottomNavigationView navigation;
@@ -71,14 +74,14 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
     private ImageView prev;
     private ImageView next;
     private ImageView close;
-    private ImageView art,big_art,playPause;
+    private ImageView art,big_art,playPause,repeat,shuffle;
     private ProgressBar buffer_progress;
     private FloatingActionButton playPauseFab;
-
-    //For  Implementation
+    private LineProgress lineProgress;
+    private Slider audioPg;
     private AudioStreamingManager streamingManager;
     private MediaMetaData currentSong;
-    public List<MediaMetaData> listOfSongs = new ArrayList<MediaMetaData>();
+    public List<MediaMetaData> songsQueueList=new ArrayList<>();
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -169,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
     };
     private int dominant_color;
     private boolean isExpanded=false;
-    private SeekBar seekbar;
     private TextView music_name,author_name,startTime,duration;
     public void startSong(MediaMetaData mediaMetaData){
 
@@ -179,8 +181,8 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
             Toasty.error(this,"Error connecting to the server, Please try again later...",Toasty.LENGTH_SHORT,true).show();
         }else{
 
-            listOfSongs.add(mediaMetaData);
-            configAudioStreamer();
+            songsQueueList.add(mediaMetaData);
+            streamingManager.setMediaList(songsQueueList);
             checkAlreadyPlaying(mediaMetaData);
 
         }
@@ -263,13 +265,20 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         buffer_progress=findViewById(R.id.buffer_progress);
         playPause=findViewById(R.id.playPause);
         playPauseFab=findViewById(R.id.playPauseFab);
-        seekbar=findViewById(R.id.seekbar);
         music_name=findViewById(R.id.music_name);
         author_name=findViewById(R.id.music_author_name);
         startTime=findViewById(R.id.startTime);
         duration=findViewById(R.id.duration);
+        shuffle=findViewById(R.id.shuffle);
+        repeat=findViewById(R.id.repeat);
+        audioPg=findViewById(R.id.slider);
 
         configAudioStreamer();
+        String timeString = "00:00";
+        startTime.setText(timeString);
+        duration.setText(timeString);
+        audioPg.setValue(0);
+        audioPg.setOnValueChangedListener(this);
 
         removeNavLightTheme(getWindow().getDecorView());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -277,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
         playPauseFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
-        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        checkAlreadyPlaying(null);
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -291,16 +300,12 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
                 if(previousState== SlidingUpPanelLayout.PanelState.DRAGGING && newState== SlidingUpPanelLayout.PanelState.EXPANDED) {
                     if(!isExpanded) {
-                        Animation slide_down = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_down);
-                        Animation expand_in = AnimationUtils.loadAnimation(MainActivity.this, R.anim.expand_in);
                         Animation fade_out = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
                         fade_out.setDuration(200);
                         if(buffer_progress.getVisibility()!=View.VISIBLE) {
                             playPause.startAnimation(fade_out);
                             playPause.setVisibility(View.INVISIBLE);
                         }
-                        //navigation.startAnimation(slide_down);
-                        //navigation.setVisibility(View.INVISIBLE);
                         removeStatusLightTheme(getWindow().getDecorView());
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             getWindow().setStatusBarColor(dominant_color);
@@ -311,31 +316,14 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 }else if(previousState== SlidingUpPanelLayout.PanelState.DRAGGING && newState== SlidingUpPanelLayout.PanelState.COLLAPSED){
                     if(isExpanded){
 
-                        Animation slide_up = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_up);
                         Animation expand_in = AnimationUtils.loadAnimation(MainActivity.this, R.anim.expand_in);
-                        Animation fade_out = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
-                        fade_out.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                if(buffer_progress.getVisibility()!=View.VISIBLE) {
-                                    playPause.startAnimation(expand_in);
-                                    playPause.setVisibility(View.VISIBLE);
-                                }
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                        fade_out.setDuration(200);
-                        slide_up.setDuration(200);
                         expand_in.setDuration(200);
+
+                        if(buffer_progress.getVisibility()!=View.VISIBLE) {
+                            playPause.startAnimation(expand_in);
+                            playPause.setVisibility(View.VISIBLE);
+                        }
+
                         if(mCurrentFragment.equals("profile") || mCurrentFragment.equals("friend_profile")) {
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -368,59 +356,72 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         Animation expand_in = AnimationUtils.loadAnimation(MainActivity.this, R.anim.expand_in);
         close.startAnimation(expand_in);
 
-        playPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playPauseEvent();
-            }
+        playPause.setOnClickListener(v -> playPauseEvent());
+
+        playPauseFab.setOnClickListener(v -> playPauseEvent());
+
+        prev.setOnClickListener(v -> {
+            streamingManager.onSkipToPrevious();
         });
 
-        playPauseFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playPauseEvent();
-            }
+        next.setOnClickListener(v -> {
+            streamingManager.onSkipToNext();
         });
 
-        prev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                streamingManager.onSkipToPrevious();
+        repeat.setOnClickListener(v -> {
+
+            if(currentSong!=null) {
+                if (streamingManager.getIsRepeatSong()) {
+                    Toasty.success(getApplicationContext(),"Repeat off",Toasty.LENGTH_SHORT,true).show();
+                    streamingManager.setRepeatSong(null);
+                    repeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one_trans_white_24dp));
+                } else {
+                    Toasty.success(getApplicationContext(),"Song will repeated once again",Toasty.LENGTH_SHORT,true).show();
+                    streamingManager.setRepeatSong(currentSong);
+                    repeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one_white_24dp));
+                }
             }
+
         });
 
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                streamingManager.onSkipToNext();
-            }
-        });
+        close.setOnClickListener(v -> new DialogSheet(MainActivity.this)
+                .setTitle("Clear Queue")
+                .setMessage("Clearing queue would stop current playing song")
+                .setPositiveButton("Yes", v1 -> {
 
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DialogSheet(MainActivity.this)
-                        .setTitle("Clear Queue")
-                        .setMessage("Clearing queue would stop current playing song")
-                        .setPositiveButton("Yes", new DialogSheet.OnPositiveClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                    streamingManager.cleanupPlayer(MainActivity.this,true,true);
+                    streamingManager.clearList();
+                    streamingManager.setRepeatSong(null);
+                    songsQueueList.clear();
+                    if(mCurrentFragment.equals("profile") || mCurrentFragment.equals("friend_profile")) {
 
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(Color.parseColor("#5F6BDF"));
+                        }
 
+                    }else {
+                        setStatusLightTheme(getWindow().getDecorView());
 
-                            }
-                        })
-                        .setNegativeButton("No", new DialogSheet.OnNegativeClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+                        }
 
-                            }
-                        })
-                        .setColoredNavigationBar(true)
-                        .setRoundedCorners(true)
-                        .show();
-            }
-        });
+                    }
+
+                    navigation.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccent));
+                    }
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    buffer_progress.setVisibility(View.INVISIBLE);
+
+                })
+                .setNegativeButton("No", v12 -> {
+
+                })
+                .setColoredNavigationBar(true)
+                .setRoundedCorners(true)
+                .show());
 
     }
 
@@ -441,7 +442,6 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }
 
     }
-
     void showFragment(Fragment fragment,String tag){
 
         getSupportFragmentManager().beginTransaction()
@@ -450,54 +450,106 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 .commit();
 
     }
-
     public void configAudioStreamer() {
         streamingManager = AudioStreamingManager.getInstance(this);
         streamingManager.setPlayMultiple(true);
-        streamingManager.setMediaList(listOfSongs);
+        songsQueueList.addAll(streamingManager.getMediaList());
+        if(!streamingManager.getIsRepeatSong()) {
+            streamingManager.setRepeatSong(null);
+        }
         streamingManager.setShowPlayerNotification(true);
         streamingManager.setPendingIntentAct(getNotificationPendingIntent());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkAlreadyPlaying(null);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        checkAlreadyPlaying(null);
+    }
+
     public void checkAlreadyPlaying(MediaMetaData mediaMetaData) {
         if (streamingManager.isPlaying()) {
-            Toasty.success(this,"Added to queue: "+mediaMetaData.getMediaTitle(),Toasty.LENGTH_SHORT,true).show();
             currentSong = streamingManager.getCurrentAudio();
+
+            if(mediaMetaData!=null)
+                Toasty.success(this,"Added to queue: "+mediaMetaData.getMediaTitle(),Toasty.LENGTH_SHORT,true).show();
+
             if (currentSong != null) {
                 currentSong.setPlayState(streamingManager.mLastPlaybackState);
-                showMediaInfo(currentSong);
+                showMediaInfo(currentSong,false);
             }
         }else {
-            playSong(mediaMetaData);
+            if(mediaMetaData!=null)
+                playSong(mediaMetaData);
+            else
+                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         }
     }
 
     public void playSong(MediaMetaData media) {
         if (streamingManager != null) {
             streamingManager.onPlay(media);
-            showMediaInfo(media);
+            showMediaInfo(media,false);
         }
     }
-
-    private void showMediaInfo(MediaMetaData song) {
-
+    private void showMediaInfo(MediaMetaData song,boolean checkOnStart) {
 
         currentSong=song;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            seekbar.setProgress(0,true);
+
+        audioPg.setValue(0);
+        audioPg.setMin(0);
+        audioPg.setMax((int)currentSong.getMediaDuration());
+
+        long song_duration=currentSong.getMediaDuration()/1000;
+        long minute=song_duration/60;
+        long second=song_duration-(minute*60);
+        duration.setText(minute + ":" + second);
+
+        if(checkOnStart) {
+            isExpanded=true;
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         }else{
-            seekbar.setProgress(0);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            seekbar.setMin(0);
+            if(slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.HIDDEN) {
+                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
         }
 
-        if(slidingUpPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.HIDDEN){
-            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if(streamingManager.getIsRepeatSong()){
+
+            if(streamingManager.getRepeatSong().getMediaId().equals(currentSong.getMediaId())){
+                repeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one_white_24dp));
+            }else{
+                repeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one_trans_white_24dp));
+            }
+
+        }else{
+            repeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one_trans_white_24dp));
         }
 
         music_name.setText(song.getMediaTitle());
         author_name.setText(song.getMediaArtist());
+        dominant_color=getResources().getColor(R.color.colorAccent);
+
+        if(isExpanded){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(dominant_color);
+            }
+            removeLightTheme(getWindow().getDecorView());
+        }
+
+        removeNavLightTheme(getWindow().getDecorView());
+        slidingUpPanelLayout.setBackgroundColor(dominant_color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setNavigationBarColor(dominant_color);
+        }
+
+        navigation.setBackgroundColor(dominant_color);
 
         Glide.with(this)
                 .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_song_art))
@@ -545,7 +597,6 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 .into(big_art);
 
     }
-
     public PendingIntent getNotificationPendingIntent() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction("openplayer");
@@ -585,7 +636,6 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }
         super.onDestroy();
     }
-
     public void removeLightTheme(View view){
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && Build.VERSION.SDK_INT<Build.VERSION_CODES.O){
@@ -614,7 +664,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
                 playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
                 playPauseFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
-                if(isExpanded) {
+                if(!isExpanded) {
                     playPause.setVisibility(View.VISIBLE);
                 }else{
                     playPause.setVisibility(View.GONE);
@@ -622,6 +672,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
                 if (currentSong != null) {
                     currentSong.setPlayState(PlaybackStateCompat.STATE_PLAYING);
+                    showMediaInfo(currentSong,false);
                 }
                 break;
             case PlaybackStateCompat.STATE_PAUSED:
@@ -629,7 +680,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
                 playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_24dp));
                 playPauseFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_24dp));
-                if(isExpanded) {
+                if(!isExpanded) {
                     playPause.setVisibility(View.VISIBLE);
                 }else{
                     playPause.setVisibility(View.GONE);
@@ -637,15 +688,35 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
                 if (currentSong != null) {
                     currentSong.setPlayState(PlaybackStateCompat.STATE_PAUSED);
+                    showMediaInfo(currentSong,false);
                 }
                 break;
             case PlaybackStateCompat.STATE_NONE:
                 currentSong.setPlayState(PlaybackStateCompat.STATE_NONE);
                 break;
             case PlaybackStateCompat.STATE_STOPPED:
+
+                if(mCurrentFragment.equals("profile") || mCurrentFragment.equals("friend_profile")) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setStatusBarColor(Color.parseColor("#5F6BDF"));
+                    }
+
+                }else {
+                    setStatusLightTheme(getWindow().getDecorView());
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+                    }
+
+                }
+
+                navigation.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccent));
+                }
                 slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 buffer_progress.setVisibility(View.INVISIBLE);
-                seekbar.setProgress(0);
                 if (currentSong != null) {
                     currentSong.setPlayState(PlaybackStateCompat.STATE_NONE);
                 }
@@ -663,31 +734,50 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
     @Override
     public void playSongComplete() {
-
+        String timeString = "00.00";
+        startTime.setText(timeString);
+        duration.setText(timeString);
+        audioPg.setValue(0);
     }
-
     @Override
     public void currentSeekBarPosition(int progress) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            seekbar.setProgress(progress,true);
-        }else{
-            seekbar.setProgress(progress);
-        }
+        audioPg.setValue(progress);
+        setPGTime(progress);
     }
-
     @Override
     public void playCurrent(int indexP, MediaMetaData currentAudio) {
-        showMediaInfo(currentAudio);
+        showMediaInfo(currentAudio,false);
     }
-
     @Override
     public void playNext(int indexP, MediaMetaData currentAudio) {
-        showMediaInfo(currentAudio);
+        showMediaInfo(currentAudio,false);
+    }
+    @Override
+    public void playPrevious(int indexP, MediaMetaData currentAudio) {
+        showMediaInfo(currentAudio,false);
     }
 
     @Override
-    public void playPrevious(int indexP, MediaMetaData currentAudio) {
-        showMediaInfo(currentAudio);
+    public void onValueChanged(int value) {
+        streamingManager.onSeekTo(value);
+        streamingManager.scheduleSeekBarUpdate();
+    }
+
+    private void setPGTime(int progress) {
+        try {
+            String timeString = "00.00";
+            int linePG = 0;
+            currentSong = streamingManager.getCurrentAudio();
+            if (currentSong != null && progress != currentSong.getMediaDuration()) {
+                timeString = DateUtils.formatElapsedTime(progress / 1000);
+                Long audioDuration = currentSong.getMediaDuration();
+                linePG = (int) (((progress / 1000) * 100) / audioDuration);
+            }
+            startTime.setText(timeString);
+            //lineProgress.setLineProgress(linePG);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

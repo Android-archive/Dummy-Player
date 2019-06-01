@@ -86,6 +86,7 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Vi
                         bundle.putString("album_name", release.getAlbum());
                         bundle.putString("genre_name", release.getGenre());
                         bundle.putString("link", release.getLink());
+                        bundle.putLong("duration", release.getDuration());
 
                         Fragment fragment=new SongDetails();
                         fragment.setArguments(bundle);
@@ -124,6 +125,7 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Vi
                             recentsEntity.setAlbum(release.getAlbum());
                             recentsEntity.setArtist(release.getArtist());
                             recentsEntity.setArt(release.getArt());
+                            recentsEntity.setDuration(release.getDuration());
 
                             MediaMetaData metaData = new MediaMetaData();
                             metaData.setMediaId(release.getName());
@@ -132,6 +134,7 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Vi
                             metaData.setMediaAlbum(release.getAlbum());
                             metaData.setMediaArtist(release.getArtist());
                             metaData.setMediaArt(release.getArt());
+                            metaData.setMediaDuration(release.getDuration());
 
                             String nameInDatabase=viewModel.findSongByName(release.getName());
                             if(!nameInDatabase.equals("null")){
@@ -192,6 +195,7 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Vi
                                 recentsEntity.setAlbum(release.getAlbum());
                                 recentsEntity.setArtist(release.getArtist());
                                 recentsEntity.setArt(release.getArt());
+                                recentsEntity.setDuration(release.getDuration());
 
                                 MediaMetaData metaData = new MediaMetaData();
                                 metaData.setMediaId(release.getName());
@@ -200,6 +204,7 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Vi
                                 metaData.setMediaAlbum(release.getAlbum());
                                 metaData.setMediaArtist(release.getArtist());
                                 metaData.setMediaArt(release.getArt());
+                                metaData.setMediaDuration(release.getDuration());
 
                                 String nameInDatabase=viewModel.findSongByName(release.getName());
                                 if(!nameInDatabase.equals("null")){

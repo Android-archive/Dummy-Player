@@ -110,6 +110,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                        recentsEntity.setGenre(release.getGenre());
                        recentsEntity.setAlbum(release.getAlbum());
                        recentsEntity.setArtist(release.getArtist());
+                       recentsEntity.setDuration(release.getDuration());
                        recentsEntity.setArt(release.getArt());
 
                        String nameInDatabase = (String) viewModel.findSongByName(release.getName());
@@ -127,6 +128,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                        metaData.setMediaAlbum(release.getAlbum());
                        metaData.setMediaArtist(release.getArtist());
                        metaData.setMediaArt(release.getArt());
+                       metaData.setMediaDuration(release.getDuration());
+                       metaData.setMediaDuration(0);
 
                        HomeFragment.HideDefaultCard(context);
                        listItemListener.onItemClickListener(metaData);
@@ -159,6 +162,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                                           recentsEntity.setAlbum(release.getAlbum());
                                           recentsEntity.setArtist(release.getArtist());
                                           recentsEntity.setArt(release.getArt());
+                                          recentsEntity.setDuration(release.getDuration());
 
                                           MediaMetaData metaData = new MediaMetaData();
                                           metaData.setMediaId(release.getName());
@@ -167,10 +171,10 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                                           metaData.setMediaAlbum(release.getAlbum());
                                           metaData.setMediaArtist(release.getArtist());
                                           metaData.setMediaArt(release.getArt());
+                                          metaData.setMediaDuration(release.getDuration());
 
                                           HomeFragment.HideDefaultCard(context);
                                           listItemListener.onItemClickListener(metaData);
-                                          //MainActivity.startSong(activity,context, recentsEntity);
 
                                       }
                                     }
@@ -192,6 +196,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                 bundle.putString("album_name", release.getAlbum());
                 bundle.putString("genre_name", release.getGenre());
                 bundle.putString("link", release.getLink());
+                bundle.putLong("duration", release.getDuration());
 
                 Fragment fragment=new SongDetails();
                 fragment.setArguments(bundle);
@@ -220,6 +225,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                     bundle.putString("album_name", release.getAlbum());
                     bundle.putString("genre_name", release.getGenre());
                     bundle.putString("link", release.getLink());
+                    bundle.putLong("duration", release.getDuration());
 
                     Fragment fragment = new SongDetails();
                     fragment.setArguments(bundle);
@@ -257,6 +263,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                                        recentsEntity.setAlbum(release.getAlbum());
                                        recentsEntity.setArtist(release.getArtist());
                                        recentsEntity.setArt(release.getArt());
+                                       recentsEntity.setDuration(release.getDuration());
 
                                        MediaMetaData metaData = new MediaMetaData();
                                        metaData.setMediaTitle(release.getName());
@@ -264,11 +271,11 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                                        metaData.setMediaAlbum(release.getAlbum());
                                        metaData.setMediaArtist(release.getArtist());
                                        metaData.setMediaArt(release.getArt());
+                                       metaData.setMediaDuration(release.getDuration());
 
 
                                        HomeFragment.HideDefaultCard(context);
                                        listItemListener.onItemClickListener(metaData);
-                                       //MainActivity.startSong(activity,context,recentsEntity);
 
                                    }
                                 }
