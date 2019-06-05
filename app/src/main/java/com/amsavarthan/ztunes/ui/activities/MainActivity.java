@@ -13,11 +13,16 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import com.amsavarthan.ztunes.adapters.NewReleaseAdapter;
+import com.amsavarthan.ztunes.adapters.QueueAdapter;
+import com.amsavarthan.ztunes.adapters.SongsAdapter;
 import com.amsavarthan.ztunes.music.AudioStreamingManager;
 import com.amsavarthan.ztunes.music.CurrentSessionCallback;
 import com.amsavarthan.ztunes.music.MediaMetaData;
+import com.amsavarthan.ztunes.room.RecentsViewModel;
 import com.amsavarthan.ztunes.ui.customviews.LineProgress;
 import com.amsavarthan.ztunes.ui.customviews.Slider;
+import com.amsavarthan.ztunes.ui.fragments.QueueView;
 import com.amsavarthan.ztunes.utils.NetworkUtil;
 import com.amsavarthan.ztunes.R;
 import com.amsavarthan.ztunes.ui.fragments.FeedView;
@@ -41,7 +46,12 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import es.dmoral.toasty.Toasty;
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
@@ -49,6 +59,7 @@ import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
+import android.os.Parcelable;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.format.DateUtils;
 import android.view.MenuItem;
@@ -57,12 +68,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
 import static com.amsavarthan.ztunes.utils.NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
 
 
@@ -71,17 +84,16 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
     public static String mCurrentFragment;
     public static BottomNavigationView navigation;
     public SlidingUpPanelLayout slidingUpPanelLayout;
-    private ImageView prev;
-    private ImageView next;
-    private ImageView close;
-    private ImageView art,big_art,playPause,repeat,shuffle;
+    private ImageView art,close,next,prev,big_art,playPause,repeat,shuffle,queue;
     private ProgressBar buffer_progress;
     private FloatingActionButton playPauseFab;
-    private LineProgress lineProgress;
     private Slider audioPg;
+    private ScrollView scrollview;
     private AudioStreamingManager streamingManager;
     private MediaMetaData currentSong;
-    public List<MediaMetaData> songsQueueList=new ArrayList<>();
+    private List<MediaMetaData> songsQueueList=new ArrayList<>();
+    private QueueAdapter queueAdapter;
+    private RecentsViewModel viewModel;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -173,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
     private int dominant_color;
     private boolean isExpanded=false;
     private TextView music_name,author_name,startTime,duration;
+
     public void startSong(MediaMetaData mediaMetaData){
 
         int status= NetworkUtil.getConnectivityStatus(this);
@@ -182,11 +195,13 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }else{
 
             songsQueueList.add(mediaMetaData);
+            queueAdapter.notifyDataSetChanged();
             streamingManager.setMediaList(songsQueueList);
             checkAlreadyPlaying(mediaMetaData);
 
         }
     }
+
     public void setStatusLightTheme(View view){
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
@@ -198,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }
 
     }
+
     public void removeStatusLightTheme(View view){
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
@@ -208,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
         }
     }
+
     public void removeNavLightTheme(View view){
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
@@ -224,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
     }
+
     @Override
     public void onBackPressed() {
         if(slidingUpPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED){
@@ -272,6 +290,17 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         shuffle=findViewById(R.id.shuffle);
         repeat=findViewById(R.id.repeat);
         audioPg=findViewById(R.id.slider);
+        scrollview=findViewById(R.id.scrollview);
+        queue=findViewById(R.id.queue);
+
+        viewModel = ViewModelProviders.of(this).get(RecentsViewModel.class);
+
+        queueAdapter=new QueueAdapter(this,songsQueueList,viewModel);
+        queueAdapter.setItemListener(media -> playSong(media));
+
+        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        layoutManager.setSmoothScrollbarEnabled(true);
 
         configAudioStreamer();
         String timeString = "00:00";
@@ -284,8 +313,10 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccent));
         }
+        queue.setVisibility(GONE);
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
         playPauseFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
+        mCurrentFragment="home";
         checkAlreadyPlaying(null);
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -300,11 +331,14 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
                 if(previousState== SlidingUpPanelLayout.PanelState.DRAGGING && newState== SlidingUpPanelLayout.PanelState.EXPANDED) {
                     if(!isExpanded) {
+                        Animation expand_in = AnimationUtils.loadAnimation(MainActivity.this, R.anim.expand_in);
                         Animation fade_out = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
                         fade_out.setDuration(200);
                         if(buffer_progress.getVisibility()!=View.VISIBLE) {
                             playPause.startAnimation(fade_out);
                             playPause.setVisibility(View.INVISIBLE);
+                            queue.startAnimation(expand_in);
+                            queue.setVisibility(View.VISIBLE);
                         }
                         removeStatusLightTheme(getWindow().getDecorView());
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -316,10 +350,14 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 }else if(previousState== SlidingUpPanelLayout.PanelState.DRAGGING && newState== SlidingUpPanelLayout.PanelState.COLLAPSED){
                     if(isExpanded){
 
+                        scrollview.scrollTo(0,0);
+                        Animation fade_out = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
                         Animation expand_in = AnimationUtils.loadAnimation(MainActivity.this, R.anim.expand_in);
                         expand_in.setDuration(200);
 
                         if(buffer_progress.getVisibility()!=View.VISIBLE) {
+                            queue.startAnimation(fade_out);
+                            queue.setVisibility(GONE);
                             playPause.startAnimation(expand_in);
                             playPause.setVisibility(View.VISIBLE);
                         }
@@ -358,6 +396,31 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
         playPause.setOnClickListener(v -> playPauseEvent());
 
+        queue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(mCurrentFragment!="queue"){
+                    Bundle args=new Bundle();
+                    args.putParcelableArrayList("queue", (ArrayList<? extends Parcelable>) songsQueueList);
+
+                    Fragment fragment=new QueueView();
+                    fragment.setArguments(args);
+
+
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                            .addToBackStack(null)
+                            .replace(R.id.container,fragment,"queue")
+                            .commit();
+
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    mCurrentFragment="queue";
+                }
+
+            }
+        });
+
         playPauseFab.setOnClickListener(v -> playPauseEvent());
 
         prev.setOnClickListener(v -> {
@@ -389,31 +452,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 .setMessage("Clearing queue would stop current playing song")
                 .setPositiveButton("Yes", v1 -> {
 
-                    streamingManager.cleanupPlayer(MainActivity.this,true,true);
-                    streamingManager.clearList();
-                    streamingManager.setRepeatSong(null);
-                    songsQueueList.clear();
-                    if(mCurrentFragment.equals("profile") || mCurrentFragment.equals("friend_profile")) {
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            getWindow().setStatusBarColor(Color.parseColor("#5F6BDF"));
-                        }
-
-                    }else {
-                        setStatusLightTheme(getWindow().getDecorView());
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-                        }
-
-                    }
-
-                    navigation.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccent));
-                    }
-                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                    buffer_progress.setVisibility(View.INVISIBLE);
+                   stopSong();
 
                 })
                 .setNegativeButton("No", v12 -> {
@@ -422,6 +461,36 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 .setColoredNavigationBar(true)
                 .setRoundedCorners(true)
                 .show());
+
+    }
+
+    public void stopSong() {
+
+        streamingManager.cleanupPlayer(MainActivity.this,true,true);
+        streamingManager.clearList();
+        streamingManager.setRepeatSong(null);
+        songsQueueList.clear();
+        if(mCurrentFragment.equals("profile") || mCurrentFragment.equals("friend_profile")) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(Color.parseColor("#5F6BDF"));
+            }
+
+        }else {
+            setStatusLightTheme(getWindow().getDecorView());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+
+        }
+
+        navigation.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccent));
+        }
+        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        buffer_progress.setVisibility(View.INVISIBLE);
 
     }
 
@@ -442,6 +511,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }
 
     }
+
     void showFragment(Fragment fragment,String tag){
 
         getSupportFragmentManager().beginTransaction()
@@ -450,6 +520,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 .commit();
 
     }
+
     public void configAudioStreamer() {
         streamingManager = AudioStreamingManager.getInstance(this);
         streamingManager.setPlayMultiple(true);
@@ -487,17 +558,46 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }else {
             if(mediaMetaData!=null)
                 playSong(mediaMetaData);
-            else
-                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            else {
+                if(!songsQueueList.isEmpty()){
+                    showMediaInfo(songsQueueList.get(0),false);
+                }else{
+
+                    if(mCurrentFragment.equals("profile") || mCurrentFragment.equals("friend_profile")) {
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(Color.parseColor("#5F6BDF"));
+                        }
+
+                    }else {
+                        setStatusLightTheme(getWindow().getDecorView());
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+                        }
+
+                    }
+
+                    navigation.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccent));
+                    }
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    buffer_progress.setVisibility(View.INVISIBLE);
+
+                }
+            }
         }
     }
 
     public void playSong(MediaMetaData media) {
         if (streamingManager != null) {
+            queueAdapter.notifyDataSetChanged();
             streamingManager.onPlay(media);
             showMediaInfo(media,false);
         }
     }
+
     private void showMediaInfo(MediaMetaData song,boolean checkOnStart) {
 
         currentSong=song;
@@ -597,12 +697,14 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 .into(big_art);
 
     }
+
     public PendingIntent getNotificationPendingIntent() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction("openplayer");
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(this, 0, intent, 0);
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -614,6 +716,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
             e.printStackTrace();
         }
     }
+
     @Override
     public void onStop() {
         try {
@@ -625,6 +728,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }
         super.onStop();
     }
+
     @Override
     protected void onDestroy() {
         try {
@@ -636,6 +740,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }
         super.onDestroy();
     }
+
     public void removeLightTheme(View view){
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && Build.VERSION.SDK_INT<Build.VERSION_CODES.O){
@@ -662,15 +767,18 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
             case PlaybackStateCompat.STATE_PLAYING:
                 buffer_progress.setVisibility(View.INVISIBLE);
 
-                playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
-                playPauseFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
-                if(!isExpanded) {
-                    playPause.setVisibility(View.VISIBLE);
+                if(isExpanded){
+                   queue.setVisibility(View.VISIBLE);
+                   playPause.setVisibility(View.GONE);
                 }else{
-                    playPause.setVisibility(View.GONE);
+                    queue.setVisibility(View.GONE);
+                    playPause.setVisibility(View.VISIBLE);
                 }
 
-                if (currentSong != null) {
+                playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
+                playPauseFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_24dp));
+
+               if (currentSong != null) {
                     currentSong.setPlayState(PlaybackStateCompat.STATE_PLAYING);
                     showMediaInfo(currentSong,false);
                 }
@@ -680,10 +788,13 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
                 playPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_24dp));
                 playPauseFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow_24dp));
-                if(!isExpanded) {
-                    playPause.setVisibility(View.VISIBLE);
-                }else{
+
+                if(isExpanded){
+                    queue.setVisibility(View.VISIBLE);
                     playPause.setVisibility(View.GONE);
+                }else{
+                    queue.setVisibility(View.GONE);
+                    playPause.setVisibility(View.VISIBLE);
                 }
 
                 if (currentSong != null) {
@@ -722,6 +833,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                 }
                 break;
             case PlaybackStateCompat.STATE_BUFFERING:
+                queue.setVisibility(View.INVISIBLE);
                 playPause.setVisibility(View.INVISIBLE);
                 buffer_progress.setVisibility(View.VISIBLE);
                 if (currentSong != null) {
@@ -739,19 +851,23 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         duration.setText(timeString);
         audioPg.setValue(0);
     }
+
     @Override
     public void currentSeekBarPosition(int progress) {
         audioPg.setValue(progress);
         setPGTime(progress);
     }
+
     @Override
     public void playCurrent(int indexP, MediaMetaData currentAudio) {
         showMediaInfo(currentAudio,false);
     }
+
     @Override
     public void playNext(int indexP, MediaMetaData currentAudio) {
         showMediaInfo(currentAudio,false);
     }
+
     @Override
     public void playPrevious(int indexP, MediaMetaData currentAudio) {
         showMediaInfo(currentAudio,false);
@@ -779,6 +895,5 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
             e.printStackTrace();
         }
     }
-
 
 }

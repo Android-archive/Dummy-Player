@@ -274,11 +274,11 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Vi
         }
     }
 
-    public void setItemListener(SongsAdapter.ListItemListener listItemListener) {
+    public void setItemListener(ListItemListener listItemListener) {
         this.listItemListener = listItemListener;
     }
 
-    public SongsAdapter.ListItemListener listItemListener;
+    public ListItemListener listItemListener;
 
     public interface ListItemListener {
         void onItemClickListener(MediaMetaData media);

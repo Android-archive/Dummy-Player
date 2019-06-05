@@ -29,7 +29,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.marcoscg.dialogsheet.DialogSheet;
 
 import java.util.HashMap;
@@ -112,63 +115,73 @@ public class LoginActivity extends AppCompatActivity {
                         public void onSuccess(final AuthResult authResult) {
                             if(authResult.getUser().isEmailVerified()) {
 
-                               mFirestore.collection("Users")
-                                       .document(authResult.getUser().getUid())
-                                       .get()
-                                       .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                           @Override
-                                           public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                FirebaseInstanceId.getInstance().getInstanceId()
+                                        .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                            @Override
+                                            public void onSuccess(InstanceIdResult instanceIdResult) {
 
-                                               Map<String,Object> map=new HashMap<>();
-                                               map.put("last_login",String.valueOf(System.currentTimeMillis()));
+                                                String token=instanceIdResult.getToken();
+                                                mFirestore.collection("Users")
+                                                        .document(authResult.getUser().getUid())
+                                                        .get()
+                                                        .addOnSuccessListener(documentSnapshot -> {
 
-                                               final String name=documentSnapshot.getString("name");
-                                               final String profile=documentSnapshot.getString("picture");
-                                               final String account_type=documentSnapshot.getString("account_type");
+                                                            Map<String,Object> map=new HashMap<>();
+                                                            map.put("token_ids", FieldValue.arrayUnion(token));
+                                                            map.put("last_login",String.valueOf(System.currentTimeMillis()));
 
-                                               sharedPreferences.edit()
-                                                       .putString("name", name)
-                                                       .putString("picture", profile)
-                                                       .putString("account_type", account_type)
-                                                       .apply();
+                                                            final String name=documentSnapshot.getString("name");
+                                                            final String profile=documentSnapshot.getString("picture");
+                                                            final String account_type=documentSnapshot.getString("account_type");
 
-                                               mFirestore.collection("Users")
-                                                       .document(documentSnapshot.getId())
-                                                       .update(map)
-                                                       .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                           @Override
-                                                           public void onSuccess(Void aVoid) {
+                                                            sharedPreferences.edit()
+                                                                    .putString("name", name)
+                                                                    .putString("token",token)
+                                                                    .putString("picture", profile)
+                                                                    .putString("account_type", account_type)
+                                                                    .apply();
 
-                                                               Toasty.success(LoginActivity.this, "Successfully logged in", Toasty.LENGTH_SHORT, true).show();
-                                                               if(account_type.equals("none")){
-                                                                   startActivity(new Intent(LoginActivity.this, AccountTypeSelection.class));
-                                                                   finish();
-                                                                   progressDialog.dismiss();
-                                                               }else{
-                                                                   startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                                                                   finish();
-                                                                   progressDialog.dismiss();
-                                                               }
-                                                           }
-                                                       })
-                                                       .addOnFailureListener(new OnFailureListener() {
-                                                           @Override
-                                                           public void onFailure(@NonNull Exception e) {
-                                                               progressDialog.dismiss();
-                                                               Log.e("Login error",e.getLocalizedMessage());
-                                                           }
-                                                       });
+                                                            mFirestore.collection("Users")
+                                                                    .document(documentSnapshot.getId())
+                                                                    .update(map)
+                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
 
-                                           }
-                                       })
-                                       .addOnFailureListener(new OnFailureListener() {
-                                           @Override
-                                           public void onFailure(@NonNull Exception e) {
-                                               Toasty.error(LoginActivity.this,"Error logging in : "+e.getLocalizedMessage(),Toasty.LENGTH_SHORT,true).show();
-                                               progressDialog.dismiss();
-                                               Log.e("Error",e.getLocalizedMessage());
-                                           }
-                                       });
+                                                                            Toasty.success(LoginActivity.this, "Successfully logged in", Toasty.LENGTH_SHORT, true).show();
+                                                                            if(account_type.equals("none")){
+                                                                                startActivity(new Intent(LoginActivity.this, AccountTypeSelection.class));
+                                                                                finish();
+                                                                                progressDialog.dismiss();
+                                                                            }else{
+                                                                                startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                                                                                finish();
+                                                                                progressDialog.dismiss();
+                                                                            }
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            progressDialog.dismiss();
+                                                                            Log.e("Login error",e.getLocalizedMessage());
+                                                                        }
+                                                                    });
+
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Toasty.error(LoginActivity.this,"Error logging in : "+e.getLocalizedMessage(),Toasty.LENGTH_SHORT,true).show();
+                                                            progressDialog.dismiss();
+                                                            Log.e("Error",e.getLocalizedMessage());
+                                                        });
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                            }
+                                        });
 
                             }else{
 

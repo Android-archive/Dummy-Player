@@ -68,7 +68,7 @@ public class ManageSongs extends Fragment {
         mAuth= FirebaseAuth.getInstance();
 
         RecentsViewModel viewModel= ViewModelProviders.of(this).get(RecentsViewModel.class);
-        songsAdapter=new LibraryAdapter(getActivity(),songs,view.getContext(),viewModel,true);
+        songsAdapter=new LibraryAdapter(songs,view.getContext(),viewModel,true);
         albumsAdapter=new AlbumsAdapter(albums,view.getContext(),false,true,false);
 
         mAlbumsRecyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -266,10 +266,7 @@ public class ProfileView extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        /*MainActivity.mediaPlayer.stop();
-                        MainActivity.mediaPlayer.reset();
-                        MainActivity.playing=false;
-                        MainActivity.initialStage=true;*/
+                        ((MainActivity)getActivity()).stopSong();
 
                         if(NetworkUtil.getConnectivityStatus(view.getContext())!=NETWORK_STATUS_NOT_CONNECTED) {
                             mAuth.signOut();

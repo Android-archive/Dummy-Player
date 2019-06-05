@@ -167,7 +167,6 @@ public class SongDetails extends Fragment {
                 HomeFragment.HideDefaultCard(view.getContext());
                 ((MainActivity)getActivity()).startSong(metaData);
 
-                //MainActivity.startSong(getActivity(),view.getContext(),recentsEntity);
             }
         });
 

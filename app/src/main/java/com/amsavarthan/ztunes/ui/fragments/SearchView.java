@@ -670,7 +670,7 @@ public class SearchView extends Fragment {
 
     private void getSongs(){
 
-        songsListsAdapter=new LibraryAdapter(getActivity(),songsList, view.getContext(),viewModel,false);
+        songsListsAdapter=new LibraryAdapter(songsList, view.getContext(),viewModel,false);
         setUpRefreshLayoutforSongs();
 
         LinearLayoutManager layoutManager=new LinearLayoutManager(view.getContext());
@@ -723,7 +723,7 @@ public class SearchView extends Fragment {
 
     private void getSongs(final String query){
 
-        songsListsAdapter=new LibraryAdapter(getActivity(),songsList, view.getContext(),viewModel,false);
+        songsListsAdapter=new LibraryAdapter(songsList, view.getContext(),viewModel,false);
         setUpRefreshLayoutforSongs(query);
 
         LinearLayoutManager layoutManager=new LinearLayoutManager(view.getContext());

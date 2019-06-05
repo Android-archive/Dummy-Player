@@ -40,13 +40,11 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     private RecentsViewModel viewModel;
     private View view;
     private boolean canManage;
-    private Activity activity;
 
-    public LibraryAdapter(Activity activity, List<Songs> newReleaseList, Context context, RecentsViewModel viewModel, boolean canManage) {
+    public LibraryAdapter(List<Songs> newReleaseList, Context context, RecentsViewModel viewModel, boolean canManage) {
         this.newReleaseList = newReleaseList;
         this.viewModel=viewModel;
         this.context = context;
-        this.activity=activity;
         this.canManage=canManage;
     }
 
@@ -129,7 +127,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
                        metaData.setMediaArtist(release.getArtist());
                        metaData.setMediaArt(release.getArt());
                        metaData.setMediaDuration(release.getDuration());
-                       metaData.setMediaDuration(0);
 
                        HomeFragment.HideDefaultCard(context);
                        listItemListener.onItemClickListener(metaData);
@@ -325,11 +322,11 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         }
     }
 
-    public void setItemListener(SongsAdapter.ListItemListener listItemListener) {
+    public void setItemListener(ListItemListener listItemListener) {
         this.listItemListener = listItemListener;
     }
 
-    public SongsAdapter.ListItemListener listItemListener;
+    public ListItemListener listItemListener;
 
     public interface ListItemListener {
         void onItemClickListener(MediaMetaData media);

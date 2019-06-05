@@ -21,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 
+import com.amsavarthan.ztunes.adapters.RecentsAdapter;
 import com.amsavarthan.ztunes.adapters.SongsAdapter;
 import com.amsavarthan.ztunes.music.MediaMetaData;
 import com.amsavarthan.ztunes.ui.activities.MainActivity;
@@ -66,13 +67,8 @@ public class Recents_FullView extends Fragment {
         RecyclerView mRecentsRecyclerview = view.findViewById(R.id.recyclerView);
         mRecentsAdapter = new Recents_FullAdapter(recentsList, view.getContext());
         mRecentsRecyclerview.setItemAnimator(new DefaultItemAnimator());
-        mRecentsAdapter.setItemListener(new SongsAdapter.ListItemListener() {
-            @Override
-            public void onItemClickListener(MediaMetaData media) {
-                ((MainActivity)getActivity()).startSong(media);
-            }
-        });
-        LinearLayoutManager layoutManager=new GridLayoutManager(view.getContext(),2,RecyclerView.VERTICAL,false);
+        mRecentsAdapter.setItemListener(media -> ((MainActivity)getActivity()).startSong(media));
+                LinearLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 2, RecyclerView.VERTICAL, false);
         layoutManager.setSmoothScrollbarEnabled(true);
 
         mRecentsRecyclerview.setLayoutManager(layoutManager);

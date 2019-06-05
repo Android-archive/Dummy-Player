@@ -130,21 +130,45 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                         Map<String, Object> likeMap = new HashMap<>();
                         likeMap.put("liked", true);
 
-                        try {
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        FirebaseFirestore.getInstance()
+                                .collection("feed")
+                                .document(feedList.get(holder.getAdapterPosition()).postId)
+                                .collection("liked_users")
+                                .document(mCurrentUser.getUid())
+                                .set(likeMap)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.i("feed","liked:"+feedList.get(holder.getAdapterPosition()).postId);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("feed","error",e);
+                                    }
+                                });
 
                     } else {
-                        Map<String, Object> likeMap = new HashMap<>();
-                        likeMap.put("liked", false);
 
-                        try {
+                        mFirestore.collection("feed")
+                                .document(feedList.get(holder.getAdapterPosition()).postId)
+                                .collection("liked_users")
+                                .document(mCurrentUser.getUid())
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.i("feed","disliked:"+feedList.get(holder.getAdapterPosition()).postId);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("feed","error",e);
+                                    }
+                                });
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
                     }
                 }
@@ -218,42 +242,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         }
 
-        /*if(feed.getType().equals("text")) {
-
-            setmImageHolderBg(feed.getColor(),holder.image_holder);
-            holder.post_image.setVisibility(View.GONE);
-            holder.post_text.setVisibility(View.VISIBLE);
-            holder.post_desc.setVisibility(View.GONE);
-            holder.post_text.setText(feed.getCaption());
-
-            holder.share_button.setOnFavoriteAnimationEndListener(new MaterialFavoriteButton.OnFavoriteAnimationEndListener() {
-                @Override
-                public void onAnimationEnd(MaterialFavoriteButton buttonView, boolean favorite) {
-                    Intent intent = new Intent(Intent.ACTION_SEND)
-                            .setType("image/*");
-                    intent.putExtra(Intent.EXTRA_STREAM, getBitmapUri(getBitmap(holder.image_holder), holder, "post_user_" + feedList.get(holder.getAdapterPosition()).getUser_id()));
-                    try {
-                        context.startActivity(Intent.createChooser(intent, "Share using..."));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            });
-
-        }else {
-
-            holder.post_image.setVisibility(View.VISIBLE);
-            holder.post_text.setVisibility(View.GONE);
-            holder.post_desc.setVisibility(View.VISIBLE);
-            holder.post_desc.setText(feed.getCaption());
-
-            Glide.with(context)
-                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.default_post))
-                    .load(feed.getImage())
-                    .into(holder.post_image);
-
-        }*/
 
     }
 
@@ -299,11 +287,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                                                                 Log.i("Post Image","deleted");
                                                             }
                                                         }).addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Log.e("Post Image",e.getLocalizedMessage());
-                                                                    }
-                                                                });
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.e("Post Image",e.getLocalizedMessage());
+                                                            }
+                                                        });
                                                     }
 
                                                     pdialog.show();
@@ -456,6 +444,28 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             isOwner=false;
             holder.delete_button.setVisibility(View.GONE);
         }
+
+        mFirestore.collection("feed")
+                .document(feeds.get(holder.getAdapterPosition()).postId)
+                .collection("liked_users")
+                .document(mCurrentUser.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            holder.like_button.setFavorite(true);
+                        }else{
+                            holder.like_button.setFavorite(false);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("like","error",e);
+                    }
+                });
 
         //Updating user display information if any changes are there inside the user's collection
         try {

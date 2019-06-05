@@ -138,7 +138,7 @@ public class HomeFragment extends Fragment {
 
         mNewReleaseAdapter=new NewReleaseAdapter(newReleaseList,view.getContext(),"normal",recentsViewModel);
         mNewReleaseRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mNewReleaseAdapter.setItemListener(new SongsAdapter.ListItemListener() {
+        mNewReleaseAdapter.setItemListener(new NewReleaseAdapter.ListItemListener() {
             @Override
             public void onItemClickListener(MediaMetaData media) {
                 ((MainActivity)getActivity()).startSong(media);
@@ -166,7 +166,7 @@ public class HomeFragment extends Fragment {
 
         mRecentsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecentsAdapter=new RecentsAdapter(recentsList,view.getContext());
-        mRecentsAdapter.setItemListener(new SongsAdapter.ListItemListener() {
+        mRecentsAdapter.setItemListener(new RecentsAdapter.ListItemListener() {
             @Override
             public void onItemClickListener(MediaMetaData media) {
                 ((MainActivity)getActivity()).startSong(media);

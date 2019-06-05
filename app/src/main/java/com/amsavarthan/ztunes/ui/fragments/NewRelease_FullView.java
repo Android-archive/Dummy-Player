@@ -67,7 +67,7 @@ public class NewRelease_FullView extends Fragment {
         mNewReleaseRecyclerView=view.findViewById(R.id.recyclerView);
         mNewReleaseAdapter=new NewReleaseAdapter(newReleaseList,view.getContext(),"full",recentsViewModel);
         mNewReleaseRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mNewReleaseAdapter.setItemListener(new SongsAdapter.ListItemListener() {
+        mNewReleaseAdapter.setItemListener(new NewReleaseAdapter.ListItemListener() {
             @Override
             public void onItemClickListener(MediaMetaData media) {
                 ((MainActivity)getActivity()).startSong(media);
