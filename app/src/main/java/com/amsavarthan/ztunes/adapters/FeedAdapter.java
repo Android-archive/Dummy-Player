@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amsavarthan.ztunes.models.MultipleImage;
+import com.amsavarthan.ztunes.ui.activities.PromotePostActivity;
 import com.amsavarthan.ztunes.utils.NetworkUtil;
 import com.amsavarthan.ztunes.R;
 import com.amsavarthan.ztunes.models.Feed;
@@ -249,8 +250,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         if(feeds.get(holder.getAdapterPosition()).getUserId().equals(mCurrentUser.getUid())){
             isOwner=true;
-            holder.delete_button.setVisibility(View.VISIBLE);
 
+            holder.promote_text.setVisibility(View.VISIBLE);
+            holder.promote_text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.startActivity(new Intent(context, PromotePostActivity.class));
+                }
+            });
+
+            holder.delete_button.setVisibility(View.VISIBLE);
             holder.delete_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -442,6 +451,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         }else{
             isOwner=false;
+            holder.promote_text.setVisibility(View.GONE);
             holder.delete_button.setVisibility(View.GONE);
         }
 
@@ -531,7 +541,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                                                 }
                                             });
 
-                                    holder.post_username.setText(documentSnapshot.getString("name"));
+                                    holder.post_username.setText(documentSnapshot.getString("name "));
 
                                 } else if (!documentSnapshot.getString("picture").equals(feeds.get(holder.getAdapterPosition()).getUserimage())) {
 
@@ -904,6 +914,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         DotsIndicator indicator;
         FrameLayout pager_layout;
         private RelativeLayout indicator_holder;
+        TextView promote_text;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -927,6 +938,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             pager_layout=itemView.findViewById(R.id.pager_layout);
             indicator = itemView.findViewById(R.id.indicator);
             indicator_holder = itemView.findViewById(R.id.indicator_holder);
+
+            promote_text=itemView.findViewById(R.id.post_promote);
+
         }
     }
 

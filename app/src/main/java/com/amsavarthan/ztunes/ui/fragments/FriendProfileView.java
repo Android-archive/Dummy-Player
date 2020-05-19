@@ -2,6 +2,8 @@ package com.amsavarthan.ztunes.ui.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amsavarthan.ztunes.ui.activities.LoginActivity;
 import com.amsavarthan.ztunes.ui.activities.MainActivity;
 import com.amsavarthan.ztunes.R;
 import com.bumptech.glide.Glide;
@@ -38,6 +41,8 @@ import androidx.fragment.app.FragmentActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class FriendProfileView extends Fragment {
 
     View view;
@@ -55,6 +60,8 @@ public class FriendProfileView extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return view=inflater.inflate(R.layout.fragment_friends_profile_view,container,false);
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
@@ -76,6 +83,19 @@ public class FriendProfileView extends Fragment {
         mFirestore=FirebaseFirestore.getInstance();
         mAuth=FirebaseAuth.getInstance();
 
+        //[edited for pitch]
+        SharedPreferences sharedPreferences=view.getContext().getSharedPreferences("AccountPref",MODE_PRIVATE);
+        boolean isAnonymous=sharedPreferences.getBoolean("anonymous",true);
+
+        if(isAnonymous) {
+            view.findViewById(R.id.loggedout).setVisibility(View.VISIBLE);
+            MaterialButton login=view.findViewById(R.id.login);
+            login.setOnClickListener(v -> startActivity(new Intent(view.getContext(), LoginActivity.class)));
+            return;
+        }
+        view.findViewById(R.id.loggedin).setVisibility(View.VISIBLE);
+        //[edited for pitch]
+
         name=view.findViewById(R.id.name);
         imageView=view.findViewById(R.id.profilePic);
         posts_view=view.findViewById(R.id.posts_view);
@@ -91,51 +111,53 @@ public class FriendProfileView extends Fragment {
 
         getFollowingAndFollowers();
 
-        mFirestore.collection("Users")
-                .document(mAuth.getCurrentUser().getUid())
-                .collection("following")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+        if(!isAnonymous) {
+            mFirestore.collection("Users")
+                    .document(mAuth.getCurrentUser().getUid())
+                    .collection("following")
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                        Animation animation=AnimationUtils.loadAnimation(view.getContext(),R.anim.expand_in);
-                        animation.setDuration(200);
+                            Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.expand_in);
+                            animation.setDuration(200);
 
-                        if(queryDocumentSnapshots.isEmpty()){
-                            follow.setVisibility(View.VISIBLE);
-                            follow.startAnimation(animation);
-                            follow.setText("follow");
-                            return;
-                        }
-
-                        for(DocumentChange documentChange:queryDocumentSnapshots.getDocumentChanges()){
-
-                            follow.setVisibility(View.VISIBLE);
-                            follow.startAnimation(animation);
-
-                            if(documentChange.getDocument().getString("user_id").equals(user_uid)){
-
-                                follow.setText("unfollow");
-
-                            }else{
-
+                            if (queryDocumentSnapshots.isEmpty()) {
+                                follow.setVisibility(View.VISIBLE);
+                                follow.startAnimation(animation);
                                 follow.setText("follow");
+                                return;
+                            }
+
+                            for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
+
+                                follow.setVisibility(View.VISIBLE);
+                                follow.startAnimation(animation);
+
+                                if (documentChange.getDocument().getString("user_id").equals(user_uid)) {
+
+                                    follow.setText("unfollow");
+
+                                } else {
+
+                                    follow.setText("follow");
+
+                                }
 
                             }
 
                         }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
+                            Toasty.error(view.getContext(), "Some technical error occurred", Toasty.LENGTH_SHORT, true).show();
+                        }
+                    });
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                        Toasty.error(view.getContext(),"Some technical error occurred",Toasty.LENGTH_SHORT,true).show();
-                    }
-                });
-
+        }
         if(TextUtils.equals(account_type,"artist")){
 
             songs_view.setVisibility(View.VISIBLE);
@@ -152,7 +174,7 @@ public class FriendProfileView extends Fragment {
                     fragment.setArguments(bundle);
 
                     ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                            .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                             .replace(R.id.container,fragment,"Artist_SongsView")
                             .addToBackStack(null)
                             .commit();
@@ -343,7 +365,7 @@ public class FriendProfileView extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"Friend_Posts")
                         .addToBackStack(null)
                         .commit();

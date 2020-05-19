@@ -150,7 +150,7 @@ public class AddSong extends Fragment {
             public void onClick(View v) {
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,new SelectAlbum(),"Select_Album")
                         .addToBackStack(null)
                         .commit();

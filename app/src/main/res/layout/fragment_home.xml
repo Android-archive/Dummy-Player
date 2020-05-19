@@ -26,10 +26,10 @@
 
                <ImageView
                    android:id="@+id/logo"
-                   android:src="@mipmap/ic_launcher"
-                   android:padding="7dp"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" />
+                   app:srcCompat="@drawable/ic_logo_gagavox_accent"
+                   android:padding="12dp"
+                   android:layout_width="60dp"
+                   android:layout_height="60dp" />
 
                <TextView
                    android:id="@+id/title"

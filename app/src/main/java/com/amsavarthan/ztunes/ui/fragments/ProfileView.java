@@ -3,6 +3,7 @@ package com.amsavarthan.ztunes.ui.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.amsavarthan.ztunes.ui.activities.LoginActivity;
 import com.amsavarthan.ztunes.ui.activities.MainActivity;
+import com.amsavarthan.ztunes.ui.activities.SplashScreen;
 import com.amsavarthan.ztunes.utils.NetworkUtil;
 import com.amsavarthan.ztunes.R;
 import com.amsavarthan.ztunes.room.RecentsEntity;
@@ -72,11 +74,12 @@ public class ProfileView extends Fragment {
     private ImageView logout,edit_name;
     private CircleImageView profilePic;
     private String mode,name_pref,profile_saved_url;
-    private RelativeLayout change_pass,change_type;
+    private RelativeLayout change_pass,change_type,openPosts;
     private boolean user=true;
     private StorageReference storageReference;
     private Uri imageUri;
     private RecentsViewModel viewModel;
+    private SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
@@ -89,15 +92,19 @@ public class ProfileView extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         clearLightStatusBar(getActivity());
         setLightStatusBar(getActivity());
+        MainActivity.removeStatusLightTheme(view);
 
         mFirestore=FirebaseFirestore.getInstance();
         mAuth=FirebaseAuth.getInstance();
-
-        if(mAuth==null) {
-            startActivity(new Intent(view.getContext(), LoginActivity.class));
-            getActivity().finish();
+        sharedPreferences=view.getContext().getSharedPreferences("AccountPref",MODE_PRIVATE);
+        boolean isAnonymous=sharedPreferences.getBoolean("anonymous",true);
+        if(isAnonymous) {
+            view.findViewById(R.id.loggedout).setVisibility(View.VISIBLE);
+            MaterialButton login=view.findViewById(R.id.login);
+            login.setOnClickListener(v -> startActivity(new Intent(view.getContext(),LoginActivity.class)));
             return;
         }
+        view.findViewById(R.id.loggedin).setVisibility(View.VISIBLE);
 
         storageReference= FirebaseStorage.getInstance().getReference().child("profile_pictures").child("users");
 
@@ -112,6 +119,7 @@ public class ProfileView extends Fragment {
         change_type=view.findViewById(R.id.change_type);
         following=view.findViewById(R.id.following_count);
         followers=view.findViewById(R.id.followers_count);
+        openPosts=view.findViewById(R.id.open_posts);
 
         edit_name.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,6 +261,27 @@ public class ProfileView extends Fragment {
             }
         });
 
+        openPosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Bundle bundle=new Bundle();
+                bundle.putString("user_id",mAuth.getCurrentUser().getUid());
+
+                Fragment fragment=new FriendPostsView();
+                fragment.setArguments(bundle);
+
+                ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
+                        .replace(R.id.container,fragment,"Friend_Posts")
+                        .addToBackStack(null)
+                        .commit();
+
+                MainActivity.mCurrentFragment="my_posts";
+
+            }
+        });
+
     }
 
     private void logout() {
@@ -276,10 +305,12 @@ public class ProfileView extends Fragment {
                                 viewModel.deletePost(recentsEntity);
                             }
 
-                            view.getContext().getSharedPreferences("AccountPref", MODE_PRIVATE).edit().putString("name", "").putString("account_type", "none").apply();
+                            view.getContext().getSharedPreferences("AccountPref", MODE_PRIVATE).edit().putString("name", "").putBoolean("anonymous",false).putString("account_type", "null").apply();
                             Toasty.success(view.getContext(), "Account logged out", Toasty.LENGTH_SHORT, true).show();
-                            LoginActivity.startActivity(view.getContext());
+
+                            startActivity(new Intent(view.getContext(), SplashScreen.class));
                             getActivity().finish();
+
                         }else{
                             Toasty.error(view.getContext(), "No connection", Toasty.LENGTH_SHORT, true).show();
                         }

@@ -52,14 +52,16 @@
                     tools:ignore="MissingPrefix" />
 
                 <TextView
+                    android:text="2m"
+                    android:visibility="visible"
                     android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/delete_button"
                     android:id="@+id/post_timestamp"
                     android:layout_marginEnd="5dp"
+                    android:gravity="end"
                     android:layout_marginStart="5dp"
+                    android:layout_toStartOf="@id/delete_button"
                     android:layout_toEndOf="@id/post_username"
                     android:layout_width="match_parent"
-                    android:gravity="end"
                     android:layout_height="wrap_content"
                     tools:ignore="MissingPrefix"
                     android:layout_toLeftOf="@+id/delete_button"
@@ -215,6 +217,27 @@
                 app:mfb_not_favorite_image="@drawable/ic_share_liked"
                 android:layout_marginRight="10dp"
                 android:layout_toRightOf="@+id/comment_button" />
+
+            <TextView
+                android:text=" Promote Post "
+                android:clickable="true"
+                android:focusable="true"
+                fontPath="fonts/GoogleSans_Bold.ttf"
+                android:layout_centerVertical="true"
+                android:id="@+id/post_promote"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="5dp"
+                android:visibility="visible"
+                android:padding="5dp"
+                android:background="@drawable/rounded_box_selected"
+                android:textColor="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingPrefix"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="5dp" />
 
         </RelativeLayout>
 

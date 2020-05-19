@@ -3,6 +3,7 @@ package com.amsavarthan.ztunes.ui.activities;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,8 +38,10 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.marcoscg.dialogsheet.DialogSheet;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
     private List<MediaMetaData> songsQueueList=new ArrayList<>();
     private QueueAdapter queueAdapter;
     private RecentsViewModel viewModel;
+    public static MainActivity activity;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -125,12 +129,12 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
                     mCurrentFragment="notification";
                     return true;
                 case R.id.news_feed:
-                    showFragment(new FeedView(),"feed");
+                    showFragment(new FeedView(), "feed");
                     setStatusLightTheme(getWindow().getDecorView());
-                    if(slidingUpPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
                         slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                     }
-                    mCurrentFragment="feed";
+                    mCurrentFragment = "feed";
                     return true;
                 case R.id.profile:
                     showFragment(new ProfileView(),"profile");
@@ -150,23 +154,8 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         public void onNavigationItemReselected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.home:
-                    setStatusLightTheme(getWindow().getDecorView());
-                    if(slidingUpPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED) {
-                        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    }
-                    break;
                 case R.id.search:
-                    setStatusLightTheme(getWindow().getDecorView());
-                    if(slidingUpPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED) {
-                        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    }
-                    break;
                 case R.id.notification:
-                    setStatusLightTheme(getWindow().getDecorView());
-                    if(slidingUpPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED) {
-                        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    }
-                    break;
                 case R.id.news_feed:
                     setStatusLightTheme(getWindow().getDecorView());
                     if(slidingUpPanelLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED) {
@@ -185,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
     private int dominant_color;
     private boolean isExpanded=false;
     private TextView music_name,author_name,startTime,duration;
+    private FirebaseAuth mAuth;
 
     public void startSong(MediaMetaData mediaMetaData){
 
@@ -202,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
         }
     }
 
-    public void setStatusLightTheme(View view){
+    public static void setStatusLightTheme(View view){
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
 
@@ -214,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
     }
 
-    public void removeStatusLightTheme(View view){
+    public static void removeStatusLightTheme(View view){
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
 
@@ -265,13 +255,25 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
         setContentView(R.layout.activity_main);
 
-        if(FirebaseAuth.getInstance().getCurrentUser()==null){
+
+        //[changed for pitch]
+
+        activity=this;
+        mAuth=FirebaseAuth.getInstance();
+
+        /*if(FirebaseAuth.getInstance().getCurrentUser()==null){
             LoginActivity.startActivity(MainActivity.this);
             finish();
         }else if(getSharedPreferences("AccountPref",MODE_PRIVATE).getString("account_type", "none").equals("none")){
             startActivity(new Intent(MainActivity.this, AccountTypeSelection.class));
             finish();
+        }*/
+
+        if(getSharedPreferences("AccountPref",MODE_PRIVATE).getString("account_type", "null").equals("none")){
+            startActivity(new Intent(MainActivity.this, AccountTypeSelection.class));
         }
+
+        //[changed for pitch]
 
         close=findViewById(R.id.close);
         prev=findViewById(R.id.prev);
@@ -409,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
 
 
                     getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                            .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                             .addToBackStack(null)
                             .replace(R.id.container,fragment,"queue")
                             .commit();
@@ -515,7 +517,7 @@ public class MainActivity extends AppCompatActivity implements CurrentSessionCal
     void showFragment(Fragment fragment,String tag){
 
         getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                 .replace(R.id.container,fragment,tag)
                 .commit();
 

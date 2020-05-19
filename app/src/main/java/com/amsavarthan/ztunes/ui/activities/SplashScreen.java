@@ -11,8 +11,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.amsavarthan.ztunes.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Timer;
@@ -49,7 +52,23 @@ public class SplashScreen extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         sharedPreferences=getSharedPreferences("AccountPref",MODE_PRIVATE);
 
-        if(mAuth.getCurrentUser()!=null){
+        if(mAuth.getCurrentUser()==null){
+
+            mAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    sharedPreferences.edit().putBoolean("anonymous",true).apply();
+                    startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                    finish();
+                }
+            });
+
+        }else{
+            startActivity(new Intent(SplashScreen.this, MainActivity.class));
+            finish();
+        }
+
+        /*if(mAuth.getCurrentUser()!=null){
             openLogin=false;
 
             if(mAuth.getCurrentUser().isEmailVerified()) {
@@ -92,7 +111,7 @@ public class SplashScreen extends AppCompatActivity {
                 });
 
             }
-        },1200);
+        },1200);*/
 
 
     }

@@ -222,7 +222,6 @@
                             android:focusable="true"
                             android:background="?selectableItemBackgroundBorderless"
                             android:id="@+id/shuffle"
-                            android:tint="#60FFFFFF"
                             app:srcCompat="@drawable/ic_shuffle_black_24dp"
                             android:padding="15dp"
                             android:layout_width="60dp"

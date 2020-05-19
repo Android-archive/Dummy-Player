@@ -65,7 +65,7 @@ public class SelectAlbum extends Fragment {
             @Override
             public void onClick(View v) {
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,new AddAlbum(),"Add_Album")
                         .addToBackStack(null)
                         .commit();

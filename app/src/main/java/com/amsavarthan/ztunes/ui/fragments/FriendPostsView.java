@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
+import com.amsavarthan.ztunes.ui.activities.MainActivity;
 import com.amsavarthan.ztunes.utils.NetworkUtil;
 import com.amsavarthan.ztunes.R;
 import com.amsavarthan.ztunes.adapters.FeedAdapter;
@@ -53,6 +54,7 @@ public class FriendPostsView extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        MainActivity.setStatusLightTheme(view);
         user_id=getArguments().getString("user_id");
 
         mFirestore= FirebaseFirestore.getInstance();

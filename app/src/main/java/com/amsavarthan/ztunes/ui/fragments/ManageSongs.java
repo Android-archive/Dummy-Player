@@ -59,6 +59,7 @@ public class ManageSongs extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        MainActivity.setStatusLightTheme(view);
         mAlbumsRecyclerView=view.findViewById(R.id.mAlbumsRecyclerView);
         mSongsRecyclerView=view.findViewById(R.id.mSongsRecyclerView);
         add_a=view.findViewById(R.id.add_album);
@@ -98,7 +99,7 @@ public class ManageSongs extends Fragment {
             @Override
             public void onClick(View v) {
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,new AddAlbum(),"Add_Album")
                         .addToBackStack(null)
                         .commit();
@@ -111,7 +112,7 @@ public class ManageSongs extends Fragment {
             @Override
             public void onClick(View v) {
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,new AddSong(),"Add_Song")
                         .addToBackStack(null)
                         .commit();

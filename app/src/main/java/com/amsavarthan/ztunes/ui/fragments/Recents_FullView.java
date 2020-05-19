@@ -119,7 +119,7 @@ public class Recents_FullView extends Fragment {
     void showFragment(Fragment fragment, String tag){
 
         ((AppCompatActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                 .replace(R.id.container,fragment,tag)
                 .commit();
 

@@ -148,6 +148,10 @@ public class LoginActivity extends AppCompatActivity {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
 
+                                                                            sharedPreferences.edit().putBoolean("anonymous",false).apply();
+                                                                            if(MainActivity.activity!=null){
+                                                                                MainActivity.activity.finish();
+                                                                            }
                                                                             Toasty.success(LoginActivity.this, "Successfully logged in", Toasty.LENGTH_SHORT, true).show();
                                                                             if(account_type.equals("none")){
                                                                                 startActivity(new Intent(LoginActivity.this, AccountTypeSelection.class));

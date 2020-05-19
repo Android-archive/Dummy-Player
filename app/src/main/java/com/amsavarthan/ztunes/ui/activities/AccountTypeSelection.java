@@ -63,6 +63,7 @@ public class AccountTypeSelection extends AppCompatActivity {
         artist=findViewById(R.id.artist);
         doneFab=findViewById(R.id.done_fab);
         sharedPreferences=getSharedPreferences("AccountPref",MODE_PRIVATE);
+        sharedPreferences.edit().putString("account_type","none").apply();
 
         doneFab.hide();
 
@@ -122,6 +123,9 @@ public class AccountTypeSelection extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     sharedPreferences.edit().putString("account_type",account_type).apply();
+                                                    if(MainActivity.activity!=null){
+                                                        MainActivity.activity.finish();
+                                                    }
                                                     startActivity(new Intent(AccountTypeSelection.this, MainActivity.class));
                                                     finish();
                                                     Toasty.success(AccountTypeSelection.this,"Account type set",Toasty.LENGTH_SHORT,true).show();

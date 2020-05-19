@@ -1,6 +1,8 @@
 package com.amsavarthan.ztunes.ui.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
+import com.amsavarthan.ztunes.ui.activities.LoginActivity;
 import com.amsavarthan.ztunes.utils.NetworkUtil;
 import com.amsavarthan.ztunes.R;
 import com.amsavarthan.ztunes.adapters.FeedAdapter;
@@ -36,6 +39,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import es.dmoral.toasty.Toasty;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FeedView extends Fragment {
 
@@ -68,6 +73,19 @@ public class FeedView extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         clearLightStatusBar(getActivity());
         mFirestore=FirebaseFirestore.getInstance();
+
+        //[edited for pitch]
+        SharedPreferences sharedPreferences=view.getContext().getSharedPreferences("AccountPref",MODE_PRIVATE);
+        boolean isAnonymous=sharedPreferences.getBoolean("anonymous",true);
+
+        if(isAnonymous) {
+            view.findViewById(R.id.loggedout).setVisibility(View.VISIBLE);
+            MaterialButton login=view.findViewById(R.id.login);
+            login.setOnClickListener(v -> startActivity(new Intent(view.getContext(), LoginActivity.class)));
+            return;
+        }
+        view.findViewById(R.id.loggedin).setVisibility(View.VISIBLE);
+        //[edited for pitch]
 
         recyclerView=view.findViewById(R.id.recyclerView);
         default_item=view.findViewById(R.id.default_item);
@@ -126,7 +144,7 @@ public class FeedView extends Fragment {
     void showFragment(Fragment fragment,String tag){
 
         ((AppCompatActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                 .replace(R.id.container,fragment,tag)
                 .addToBackStack(null)
                 .commit();

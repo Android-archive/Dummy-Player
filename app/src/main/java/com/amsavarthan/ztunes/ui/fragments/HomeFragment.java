@@ -187,7 +187,7 @@ public class HomeFragment extends Fragment {
                 Fragment fragment=new Recents_FullView();
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"Recents_FullView")
                         .addToBackStack(null)
                         .commit();
@@ -202,7 +202,7 @@ public class HomeFragment extends Fragment {
                 Fragment fragment=new Artists_FullView();
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"Artists_FullView")
                         .addToBackStack(null)
                         .commit();
@@ -489,7 +489,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,new NewRelease_FullView(),"NewRelease_FullView")
                         .addToBackStack(null)
                         .commit();
@@ -515,7 +515,7 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"GenreView")
                         .addToBackStack(null)
                         .commit();
@@ -535,7 +535,7 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"GenreView")
                         .addToBackStack(null)
                         .commit();
@@ -554,7 +554,7 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"GenreView")
                         .addToBackStack(null)
                         .commit();
@@ -573,7 +573,7 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"GenreView")
                         .addToBackStack(null)
                         .commit();
@@ -592,7 +592,7 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"GenreView")
                         .addToBackStack(null)
                         .commit();
@@ -611,7 +611,7 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"GenreView")
                         .addToBackStack(null)
                         .commit();
@@ -630,7 +630,7 @@ public class HomeFragment extends Fragment {
                 fragment.setArguments(bundle);
 
                 ((FragmentActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.activity_expand_in,R.anim.fade_out)
+                        .setCustomAnimations(R.anim.slide_up,R.anim.fade_out)
                         .replace(R.id.container,fragment,"GenreView")
                         .commit();
 

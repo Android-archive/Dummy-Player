@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.amsavarthan.ztunes">
 
+    <uses-sdk tools:overrideLibrary="github.com.st235.lib_expandablebottombar" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,7 +16,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-sdk tools:overrideLibrary="github.com.st235.lib_expandablebottombar"/>
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +24,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activities.SplashScreen"
+        <activity android:name=".ui.activities.PromotePostActivity"
+            android:label="Promote Post"
+            android:theme="@style/PromoteAppTheme"/>
+        <activity
+            android:name=".ui.activities.SplashScreen"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,16 +44,18 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.LoginActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait" />
+
         <meta-data
             android:name="firebase_performance_logcat_enabled"
             android:value="true" />
+
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

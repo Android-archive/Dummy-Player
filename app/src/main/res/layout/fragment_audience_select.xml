@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragments.AudienceSelectFragment">
+
+    <RelativeLayout
+        android:id="@+id/item1"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/rounded_box_selected"
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+
+          <TextView
+              android:textSize="22sp"
+              fontPath="fonts/GoogleSans_Bold.ttf"
+              android:textColor="#000"
+              android:text="Automatic"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              tools:ignore="MissingPrefix" />
+
+          <TextView
+              android:text="We will pick targeting based on details from your item. Sit back and relax."
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              tools:ignore="MissingPrefix" />
+
+      </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/item2"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/rounded_box"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:textSize="22sp"
+                fontPath="fonts/GoogleSans_Bold.ttf"
+                android:textColor="#000"
+                android:text="Custom - target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                android:text="Use details like categories, search, location and intrests to handpick your targeting."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingPrefix" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?selectableItemBackground"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/locationTitle"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="22sp"
+            fontPath="fonts/GoogleSans_Bold.ttf"
+            android:textColor="#000"
+            android:text="Location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/loactionSub"
+            app:layout_constraintTop_toBottomOf="@id/locationTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="All location in India."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingPrefix" />
+
+        <ImageView
+            app:layout_constraintTop_toTopOf="@+id/locationTitle"
+            app:layout_constraintBottom_toBottomOf="@id/loactionSub"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:tint="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_chevron_right_24dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?selectableItemBackground"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/cateTitle"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="22sp"
+            fontPath="fonts/GoogleSans_Bold.ttf"
+            android:textColor="#000"
+            android:text="Categories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/cateSub"
+            app:layout_constraintTop_toBottomOf="@id/cateTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Choose a specific category to promote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingPrefix" />
+
+        <ImageView
+            app:layout_constraintTop_toTopOf="@+id/cateTitle"
+            app:layout_constraintBottom_toBottomOf="@id/cateSub"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:tint="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_chevron_right_24dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
